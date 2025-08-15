@@ -674,3 +674,218 @@ def _determine_task_priority(task: Dict[str, Any], position: int, total: int) ->
         return "Medium" # Middle 40% of tasks
     else:
         return "Low"   # Last 30% of tasks
+
+
+def cleanup_all_issues(inst_token: str, confirm_deletion: bool = False, dry_run: bool = True) -> Dict[str, Any]:
+    """
+    Cleanup utility to close or delete all issues in the repository.
+    ⚠️ WARNING: This will close ALL issues in the repository!
+    
+    Args:
+        inst_token (str): GitHub installation access token
+        confirm_deletion (bool): Must be True to actually perform cleanup
+        dry_run (bool): If True, only lists issues without closing them
+        
+    Returns:
+        Dict[str, Any]: Summary of cleanup operation
+        
+    Raises:
+        ValueError: If confirmation not provided for non-dry-run
+        requests.HTTPError: If GitHub API requests fail
+    """
+    owner, repo = REPO.split("/")
+    
+    if not dry_run and not confirm_deletion:
+        raise ValueError("Must set confirm_deletion=True to actually close issues (safety check)")
+    
+    print(f"🧹 {'DRY RUN: ' if dry_run else ''}Cleanup operation for {owner}/{repo}")
+    print("=" * 60)
+    
+    # Get all open issues
+    url = f"https://api.github.com/repos/{owner}/{repo}/issues"
+    params = {
+        "state": "open",
+        "per_page": 100,  # GitHub max per page
+        "sort": "created",
+        "direction": "desc"
+    }
+    
+    all_issues = []
+    page = 1
+    
+    while True:
+        params["page"] = page
+        r = requests.get(url, headers=_github_headers(inst_token), params=params, timeout=30)
+        r.raise_for_status()
+        
+        issues = r.json()
+        if not issues:
+            break
+            
+        # Filter out pull requests (they appear in issues API)
+        real_issues = [issue for issue in issues if not issue.get("pull_request")]
+        all_issues.extend(real_issues)
+        
+        if len(issues) < 100:  # Last page
+            break
+        page += 1
+    
+    print(f"📊 Found {len(all_issues)} open issues to process")
+    
+    if not all_issues:
+        return {"status": "no_issues", "message": "No issues found to cleanup"}
+    
+    if dry_run:
+        print("\n🔍 Issues that would be closed:")
+        for issue in all_issues:
+            labels = [label["name"] for label in issue.get("labels", [])]
+            print(f"  • #{issue['number']}: {issue['title'][:70]}...")
+            if labels:
+                print(f"    🏷️ Labels: {', '.join(labels[:5])}{'...' if len(labels) > 5 else ''}")
+        
+        return {
+            "status": "dry_run",
+            "issues_found": len(all_issues),
+            "message": f"Dry run complete. {len(all_issues)} issues would be closed."
+        }
+    
+    # Actually close the issues
+    print(f"\n🗑️ Closing {len(all_issues)} issues...")
+    closed_count = 0
+    failed_count = 0
+    
+    for issue in all_issues:
+        try:
+            issue_url = f"https://api.github.com/repos/{owner}/{repo}/issues/{issue['number']}"
+            close_payload = {
+                "state": "closed",
+                "state_reason": "completed"  # or "not_planned"
+            }
+            
+            close_r = requests.patch(issue_url, headers=_github_headers(inst_token), 
+                                   json=close_payload, timeout=30)
+            close_r.raise_for_status()
+            
+            closed_count += 1
+            print(f"  ✅ Closed #{issue['number']}: {issue['title'][:50]}...")
+            
+        except requests.HTTPError as e:
+            failed_count += 1
+            print(f"  ❌ Failed to close #{issue['number']}: {e}")
+        except Exception as e:
+            failed_count += 1
+            print(f"  ❌ Error closing #{issue['number']}: {e}")
+    
+    print(f"\n📋 Cleanup Summary:")
+    print(f"   ✅ Successfully closed: {closed_count}")
+    print(f"   ❌ Failed to close: {failed_count}")
+    print(f"   📊 Total processed: {len(all_issues)}")
+    
+    return {
+        "status": "completed",
+        "issues_processed": len(all_issues),
+        "issues_closed": closed_count,
+        "issues_failed": failed_count,
+        "success_rate": f"{(closed_count/len(all_issues)*100):.1f}%" if all_issues else "0%"
+    }
+
+
+def cleanup_test_issues_only(inst_token: str, confirm_deletion: bool = False, dry_run: bool = True) -> Dict[str, Any]:
+    """
+    Cleanup utility to close only test-related issues (safer than cleanup_all_issues).
+    Identifies test issues by common patterns in titles and labels.
+    
+    Args:
+        inst_token (str): GitHub installation access token
+        confirm_deletion (bool): Must be True to actually perform cleanup
+        dry_run (bool): If True, only lists issues without closing them
+        
+    Returns:
+        Dict[str, Any]: Summary of cleanup operation
+    """
+    owner, repo = REPO.split("/")
+    
+    if not dry_run and not confirm_deletion:
+        raise ValueError("Must set confirm_deletion=True to actually close issues (safety check)")
+    
+    print(f"🧪 {'DRY RUN: ' if dry_run else ''}Test Issues Cleanup for {owner}/{repo}")
+    print("=" * 60)
+    
+    # Get all open issues
+    url = f"https://api.github.com/repos/{owner}/{repo}/issues"
+    params = {"state": "open", "per_page": 100}
+    
+    r = requests.get(url, headers=_github_headers(inst_token), params=params, timeout=30)
+    r.raise_for_status()
+    issues = r.json()
+    
+    # Filter for test-related issues
+    test_patterns = [
+        "test", "debug", "simple", "hello world", "generic function",
+        "backend supervisor", "api endpoint", "health check", "minimal",
+        "🧪", "🔧", "🎯", "emoji test"
+    ]
+    
+    test_label_patterns = [
+        "test-agent", "complexity-", "ai-project", "has-subtasks",
+        "needs-worker", "needs-testing", "subtask"
+    ]
+    
+    test_issues = []
+    for issue in issues:
+        if issue.get("pull_request"):  # Skip PRs
+            continue
+            
+        title = issue["title"].lower()
+        labels = [label["name"].lower() for label in issue.get("labels", [])]
+        
+        # Check if issue matches test patterns
+        is_test_issue = any(pattern.lower() in title for pattern in test_patterns)
+        has_test_labels = any(any(pattern in label for pattern in test_label_patterns) for label in labels)
+        
+        if is_test_issue or has_test_labels:
+            test_issues.append(issue)
+    
+    print(f"📊 Found {len(test_issues)} test-related issues out of {len(issues)} total")
+    
+    if not test_issues:
+        return {"status": "no_test_issues", "message": "No test issues found to cleanup"}
+    
+    if dry_run:
+        print("\n🔍 Test issues that would be closed:")
+        for issue in test_issues:
+            labels = [label["name"] for label in issue.get("labels", [])]
+            print(f"  • #{issue['number']}: {issue['title']}")
+            if labels:
+                print(f"    🏷️ Labels: {', '.join(labels[:3])}{'...' if len(labels) > 3 else ''}")
+        
+        return {
+            "status": "dry_run",
+            "test_issues_found": len(test_issues),
+            "total_issues": len(issues),
+            "message": f"Dry run complete. {len(test_issues)} test issues would be closed."
+        }
+    
+    # Close the test issues
+    print(f"\n🗑️ Closing {len(test_issues)} test issues...")
+    closed_count = 0
+    
+    for issue in test_issues:
+        try:
+            issue_url = f"https://api.github.com/repos/{owner}/{repo}/issues/{issue['number']}"
+            close_r = requests.patch(issue_url, headers=_github_headers(inst_token),
+                                   json={"state": "closed", "state_reason": "completed"}, timeout=30)
+            close_r.raise_for_status()
+            
+            closed_count += 1
+            print(f"  ✅ Closed #{issue['number']}: {issue['title'][:60]}...")
+            
+        except Exception as e:
+            print(f"  ❌ Failed to close #{issue['number']}: {e}")
+    
+    return {
+        "status": "completed",
+        "test_issues_closed": closed_count,
+        "total_test_issues": len(test_issues),
+        "success_rate": f"{(closed_count/len(test_issues)*100):.1f}%" if test_issues else "0%"
+    }
