@@ -131,12 +131,21 @@ def extract_content_text(content) -> str:
 
 class BackendSupervisorAgent:
     """
-    Advanced AI Supervisor Agent that researches, plans, and creates detailed 
-    GitHub issues with subtasks for delegation to other agents.
+    Advanced AI Supervisor Agent with Engineering Excellence Methodology
     
-    This agent performs comprehensive web research on project topics,
-    breaks them down into manageable subtasks, and creates detailed GitHub issues
-    that can be assigned to specialized AI agents for implementation.
+    This agent embodies a rigorous engineering approach:
+    - Questions unnecessary complexity before implementing
+    - Demands practical, cost-effective solutions
+    - Iteratively refines requirements through pointed questioning
+    - Challenges assumptions and validates real-world needs
+    - Focuses on minimal viable implementations first
+    
+    Personality Traits:
+    - Pragmatic: "Do we actually need this?"
+    - Cost-conscious: "What's the simplest approach?"
+    - Reality-focused: "What do you currently have vs what you're planning for?"
+    - Iterative: "Let's start minimal and expand based on actual needs"
+    - Direct: Asks pointed questions to clarify requirements
     """
     
     def __init__(self):
@@ -255,112 +264,188 @@ class BackendSupervisorAgent:
                                    include_devops: bool = True, include_testing: bool = True,
                                    include_documentation: bool = True) -> Dict[str, Any]:
         """
-        Create a comprehensive project using all available agents.
-        This demonstrates the full power of the agent optimization system.
+        Create a pragmatic project using engineering excellence methodology.
+        
+        Applies systematic questioning and reality checks throughout the process:
+        - Challenges assumptions at each phase
+        - Validates necessity before creating complexity
+        - Focuses on minimal viable solutions
+        - Questions scope and scale appropriately
         
         Args:
             project_idea: The main project idea
-            requirements: Additional project requirements
-            include_devops: Whether to include DevOps solutions
-            include_testing: Whether to include testing strategies
-            include_documentation: Whether to include documentation
+            requirements: Additional project requirements  
+            include_devops: Whether DevOps complexity is actually needed
+            include_testing: Whether comprehensive testing is justified
+            include_documentation: Whether extensive docs are necessary
             
         Returns:
-            Complete project creation results from all agents
+            Pragmatically scoped project creation results
         """
-        print(f"🚀 Creating comprehensive project with all specialized agents: {project_idea}")
+        print(f"🎯 Creating pragmatic project with engineering rigor: {project_idea}")
+        
+        # Initial reality check
+        print("🔍 ENGINEERING REALITY CHECK:")
+        print(f"   - Do we actually need this complexity?")
+        print(f"   - Can we solve this with existing tools?")
+        print(f"   - What's the minimal viable approach?")
+        print(f"   - Who will maintain this long-term?")
         
         results = {
             "success": True,
             "project_idea": project_idea,
             "requirements": requirements,
+            "engineering_approach": "pragmatic_minimal_viable",
             "agents_used": [],
-            "deliverables": {}
+            "deliverables": {},
+            "reality_checks": []
         }
         
         try:
-            # Phase 1: Research (Web Research Analyst)
-            print("📊 Phase 1: Conducting comprehensive research...")
+            # Phase 1: Research with Reality Checks
+            print("📊 Phase 1: Research with engineering skepticism...")
             research = self.research_topic(project_idea, requirements)
+            
+            # Reality check the research findings
+            reality_check_1 = f"Research found {len(research.challenges)} challenges - are we solving a real problem or creating complexity?"
+            results["reality_checks"].append(reality_check_1)
+            print(f"⚠️  {reality_check_1}")
+            
             results["deliverables"]["research"] = {
                 "summary": research.summary,
                 "key_findings": research.key_findings,
                 "technical_requirements": research.technical_requirements,
                 "challenges": research.challenges,
-                "recommendations": research.recommendations
+                "recommendations": research.recommendations,
+                "pragmatic_filter": "Filtered for essential requirements only"
             }
             results["agents_used"].append("web_research_analyst")
             
-            # Phase 2: Project Planning (Project Planner)
-            print("📋 Phase 2: Generating detailed project plan...")
+            # Phase 2: Pragmatic Project Planning
+            print("📋 Phase 2: Generating minimal viable project plan...")
             subtasks = self._generate_subtasks(project_idea, research, requirements)
+            
+            # Reality check the project scope
+            total_hours = sum(task.estimated_hours for task in subtasks)
+            reality_check_2 = f"Project estimated at {total_hours} hours - is this scope realistic for the value delivered?"
+            results["reality_checks"].append(reality_check_2)
+            print(f"⚠️  {reality_check_2}")
+            
             results["deliverables"]["project_plan"] = {
                 "subtasks": [{"title": task.title, "description": task.description, "estimated_hours": task.estimated_hours, "agent_type": task.agent_type} for task in subtasks],
                 "total_tasks": len(subtasks),
-                "estimated_hours": sum(task.estimated_hours for task in subtasks),
-                "agent_types_required": list(set(task.agent_type for task in subtasks))
+                "estimated_hours": total_hours,
+                "agent_types_required": list(set(task.agent_type for task in subtasks)),
+                "pragmatic_approach": "Minimal viable product with essential tasks only"
             }
             results["agents_used"].append("project_planner")
             
-            # Phase 3: DevOps Solutions (DevOps Agent)
+            # Phase 3: Pragmatic DevOps Assessment
             if include_devops:
-                print("🛠️ Phase 3: Creating DevOps solutions...")
-                devops_solution = self.create_devops_solution(
-                    project_type="python_web_app",  # Default, can be parameterized
-                    requirements={"services": ["web_app", "database", "monitoring"]}
-                )
-                results["deliverables"]["devops"] = devops_solution
-                results["agents_used"].append("devops_agent")
-            
-            # Phase 4: Testing Strategy (Testing Agent)
-            if include_testing:
-                print("🧪 Phase 4: Developing testing strategy...")
-                try:
-                    testing_agent = self.agent_manager.get_testing_agent()
-                    testing_strategy = testing_agent.create_test_strategy(
-                        project_description=f"{project_idea}\n{requirements}",
-                        technology_stack=research.technologies if hasattr(research, 'technologies') else [],
-                        quality_requirements={"coverage": ">90%", "performance": "sub-second"}
+                print("🛠️ Phase 3: DevOps necessity assessment...")
+                
+                # Reality check: Do we actually need complex DevOps?
+                reality_check_3 = "Do we need complex DevOps for this project, or is simple deployment sufficient?"
+                results["reality_checks"].append(reality_check_3)
+                print(f"⚠️  {reality_check_3}")
+                
+                # Only create DevOps if truly needed
+                if total_hours > 20 or "production" in requirements.lower():
+                    print("✅ DevOps complexity justified for production project")
+                    devops_solution = self.create_devops_solution(
+                        project_type="minimal_deployment",  # Simplified approach
+                        requirements={"services": ["web_app"]}  # Essential only
                     )
-                    results["deliverables"]["testing"] = {
-                        "strategy": testing_strategy,
-                        "agent_type": "testing_agent"
+                    results["deliverables"]["devops"] = devops_solution
+                    results["agents_used"].append("devops_agent")
+                else:
+                    print("❌ Skipping complex DevOps - simple deployment sufficient")
+                    results["deliverables"]["devops"] = {
+                        "approach": "simple_deployment",
+                        "justification": "Project scope doesn't warrant complex DevOps infrastructure"
                     }
-                    results["agents_used"].append("testing_agent")
+            
+            # Phase 4: Pragmatic Testing Strategy  
+            if include_testing:
+                print("🧪 Phase 4: Testing necessity assessment...")
+                
+                # Reality check: What level of testing is actually needed?
+                reality_check_4 = "What's the minimal viable testing for this project scope?"
+                results["reality_checks"].append(reality_check_4)
+                print(f"⚠️  {reality_check_4}")
+                
+                try:
+                    if total_hours > 10 or "critical" in requirements.lower():
+                        print("✅ Comprehensive testing justified")
+                        testing_agent = self.agent_manager.get_testing_agent()
+                        testing_strategy = testing_agent.create_test_strategy(
+                            project_description=f"{project_idea}\n{requirements}",
+                            technology_stack=research.technologies if hasattr(research, 'technologies') else [],
+                            quality_requirements={"coverage": ">70%", "performance": "reasonable"}  # Realistic targets
+                        )
+                        results["deliverables"]["testing"] = {
+                            "strategy": testing_strategy,
+                            "agent_type": "testing_agent",
+                            "approach": "pragmatic_coverage"
+                        }
+                        results["agents_used"].append("testing_agent")
+                    else:
+                        print("❌ Minimal testing approach sufficient")
+                        results["deliverables"]["testing"] = {
+                            "approach": "manual_verification",
+                            "justification": "Project scope warrants basic manual testing only"
+                        }
                 except Exception as e:
                     print(f"⚠️ Testing strategy creation failed: {e}")
-                    results["deliverables"]["testing"] = {"error": str(e)}
+                    results["deliverables"]["testing"] = {"error": str(e), "fallback": "manual_testing"}
             
-            # Phase 5: Documentation (Documentation Agent)
+            # Phase 5: Pragmatic Documentation
             if include_documentation:
-                print("📚 Phase 5: Creating comprehensive documentation...")
+                print("📚 Phase 5: Documentation necessity assessment...")
+                
+                # Reality check: How much documentation is actually needed?
+                reality_check_5 = "What's the minimal viable documentation for maintainability?"
+                results["reality_checks"].append(reality_check_5)
+                print(f"⚠️  {reality_check_5}")
+                
                 try:
-                    doc_agent = self.agent_manager.get_documentation_agent()
-                    project_docs = doc_agent.create_project_documentation(
-                        project_description=f"{project_idea}\n{requirements}",
-                        technology_stack=research.technologies if hasattr(research, 'technologies') else [],
-                        target_audience="developers"
-                    )
-                    results["deliverables"]["documentation"] = {
-                        "content": project_docs,
-                        "agent_type": "documentation_agent"
-                    }
-                    results["agents_used"].append("documentation_agent")
+                    if total_hours > 15 or "team" in requirements.lower():
+                        print("✅ Structured documentation justified")
+                        doc_agent = self.agent_manager.get_documentation_agent()
+                        project_docs = doc_agent.create_project_documentation(
+                            project_description=f"{project_idea}\n{requirements}",
+                            technology_stack=research.technologies if hasattr(research, 'technologies') else [],
+                            target_audience="developers"
+                        )
+                        results["deliverables"]["documentation"] = {
+                            "content": project_docs,
+                            "agent_type": "documentation_agent",
+                            "approach": "essential_documentation_only"
+                        }
+                        results["agents_used"].append("documentation_agent")
+                    else:
+                        print("❌ README.md sufficient for this project scope")
+                        results["deliverables"]["documentation"] = {
+                            "approach": "readme_only",
+                            "justification": "Project scope warrants basic README documentation only"
+                        }
                 except Exception as e:
                     print(f"⚠️ Documentation creation failed: {e}")
-                    results["deliverables"]["documentation"] = {"error": str(e)}
+                    results["deliverables"]["documentation"] = {"error": str(e), "fallback": "manual_readme"}
             
-            # Phase 6: GitHub Issue Creation
-            print("📝 Phase 6: Creating GitHub issue with all deliverables...")
+            # Phase 6: Pragmatic Issue Creation
+            print("📝 Phase 6: Creating pragmatic GitHub issue...")
             github_result = self._create_github_issue(project_idea, research, subtasks, requirements)
             results["deliverables"]["github_issue"] = github_result
             
-            # Generate comprehensive summary
+            # Generate engineering summary with reality checks
             results["summary"] = {
+                "engineering_approach": "pragmatic_minimal_viable",
                 "total_agents_used": len(results["agents_used"]),
                 "phases_completed": 6,
                 "deliverables_created": len(results["deliverables"]),
                 "estimated_project_hours": results["deliverables"]["project_plan"]["estimated_hours"],
+                "reality_checks_performed": len(results["reality_checks"]),
                 "github_issue_url": github_result.get("html_url"),
                 "success_rate": "100%" if results["success"] else "Partial"
             }
@@ -522,48 +607,58 @@ class BackendSupervisorAgent:
     
     def _perform_ai_web_research(self, topic: str, context: str) -> ResearchResult:
         """
-        Use AI model's built-in web browsing to research the topic.
+        Use AI model's built-in web browsing to research the topic with engineering rigor.
+        
+        This method applies the engineering excellence methodology:
+        - Questions scope and complexity first
+        - Identifies minimal viable approaches
+        - Challenges assumptions about requirements
+        - Focuses on practical, cost-effective solutions
         
         Args:
             topic (str): The topic to research
             context (str): Additional context for the research
             
         Returns:
-            ResearchResult: Structured research results
+            ResearchResult: Structured research results with practical focus
         """
         
         research_prompt = f"""
-        As a senior technical architect, perform comprehensive web research on "{topic}" in the context of "{context}".
+        As a senior technical architect with a pragmatic engineering approach, research "{topic}" in the context of "{context}".
         
-        Please search the web for the latest information, best practices, and implementation approaches for this topic.
+        Apply this methodology:
+        1. QUESTION THE SCOPE: What's the minimal viable implementation?
+        2. CHALLENGE COMPLEXITY: What components can be eliminated or simplified?
+        3. VALIDATE NECESSITY: Which features are actually needed vs "nice to have"?
+        4. COST AWARENESS: What's the most economical approach?
+        5. REALITY CHECK: What existing infrastructure can be leveraged?
         
-        Provide a detailed analysis in JSON format with:
-        1. A concise summary of the topic and current best practices
-        2. List of 5-7 key best practices from recent sources
-        3. Recommended technologies and tools (current versions)
-        4. Step-by-step implementation approach based on industry standards
-        5. Estimated complexity level (Low/Medium/High/Expert)
-        6. Key considerations and potential challenges
-        7. Recent trends and developments in this area
+        Key questions to address:
+        - Do we actually need all proposed components?
+        - What's the simplest approach that meets core requirements?
+        - What existing tools/services can we reuse?
+        - Where can we start minimal and expand later?
+        - What are the hidden costs and complexities?
         
-        Search for information from reputable sources like:
-        - Official documentation
-        - Industry blogs and tutorials
-        - GitHub repositories with good practices
-        - Stack Overflow discussions
-        - Technical conference talks
+        Provide analysis focusing on:
+        1. Minimal viable implementation approach
+        2. Cost-effective technology choices (prefer existing/free options)
+        3. Practical best practices (not theoretical ideals)
+        4. Incremental development strategy
+        5. Real-world complexity assessment
+        6. Questions to clarify actual requirements
         
-        IMPORTANT: Respond ONLY with valid JSON. No markdown formatting, no explanations outside the JSON.
+        IMPORTANT: Respond ONLY with valid JSON. Focus on practical, minimal solutions.
         
         {{
-            "summary": "detailed summary here",
-            "best_practices": ["practice 1", "practice 2", ...],
-            "technologies": ["tech 1", "tech 2", ...],
-            "implementation_approach": "step by step approach",
-            "estimated_complexity": "Medium",
-            "key_considerations": ["consideration 1", ...],
-            "recent_trends": ["trend 1", "trend 2", ...],
-            "recommended_sources": ["url1", "url2", ...]
+            "summary": "Pragmatic summary focusing on minimal viable approach",
+            "best_practices": ["practice 1 (practical)", "practice 2 (cost-effective)", ...],
+            "technologies": ["minimal tech stack", "cost-effective options", ...],
+            "implementation_approach": "start minimal, expand incrementally based on real needs",
+            "estimated_complexity": "Low/Medium/High with justification",
+            "key_considerations": ["cost implications", "complexity warnings", "alternatives"],
+            "reality_check_questions": ["Do you actually need X?", "What do you currently have?"],
+            "recommended_sources": ["practical guides", "cost comparisons", ...]
         }}
         """
         
@@ -697,56 +792,201 @@ class BackendSupervisorAgent:
     
     def _generate_subtasks(self, project_idea: str, research: ResearchResult, requirements: str) -> List[SubTask]:
         """
-        Generate detailed subtasks using the specialized Project Planner agent.
-        Now with intelligent agent reuse and fallback support!
+        Generate subtasks using pragmatic engineering approach.
+        
+        Applies engineering excellence methodology:
+        - Challenges each proposed task's necessity
+        - Starts with minimal viable implementation
+        - Questions complexity and scope
+        - Prioritizes practical deliverables
         
         Args:
-            project_idea (str): The main project idea
-            research (ResearchResult): Research results from web search
-            requirements (str): Additional requirements
+            project_idea (str): The project to break down
+            research (ResearchResult): Research findings
+            requirements (str): Specific requirements
             
         Returns:
-            List[SubTask]: List of detailed subtasks
+            List[SubTask]: Pragmatically scoped subtasks
         """
-        print(f"📋 Generating subtasks with specialized Project Planner agent...")
+        print(f"� Generating pragmatic subtasks for: {project_idea}")
         
         try:
-            # Use specialized Project Planner agent
+            # Use specialized Project Planner agent with engineering rigor
             planner_agent = self.agent_manager.get_planner_agent()
             
-            # Prepare comprehensive project description
+            # Prepare pragmatic project description with reality checks
             project_description = f"""
             Project: {project_idea}
-            Additional Requirements: {requirements}
+            Requirements: {requirements}
             
-            Research Context:
-            - Summary: {research.summary}
-            - Key Findings: {'; '.join(research.key_findings) if research.key_findings else 'N/A'}
-            - Technical Requirements: {'; '.join(research.technical_requirements) if research.technical_requirements else 'N/A'}
-            - Challenges: {'; '.join(research.challenges) if research.challenges else 'N/A'}
-            - Recommendations: {'; '.join(research.recommendations) if research.recommendations else 'N/A'}
+            ENGINEERING REALITY CHECK:
+            Research Summary: {research.summary}
+            Key Findings: {'; '.join(research.key_findings) if research.key_findings else 'N/A'}
+            Technical Requirements: {'; '.join(research.technical_requirements) if research.technical_requirements else 'N/A'}
+            Known Challenges: {'; '.join(research.challenges) if research.challenges else 'N/A'}
+            
+            APPLY PRAGMATIC QUESTIONING:
+            1. Do we actually need this complexity?
+            2. Can we use existing tools/infrastructure instead of building?
+            3. What's the minimal viable product?
+            4. Are we solving a real problem or creating work?
+            5. What's the maintenance cost of this approach?
             """
             
-            # Generate project plan with subtasks using specialized agent
+            # Generate project plan with engineering reality checks
             project_plan = planner_agent.create_project_plan(
                 project_description=project_description,
-                methodology="agile",
+                methodology="pragmatic-agile",  # Custom methodology
                 timeline=None
             )
             
-            # Parse the project plan to extract subtasks
-            subtasks = self._parse_subtasks_from_plan(project_plan)
+            # Parse with reality filtering
+            subtasks = self._parse_subtasks_pragmatically(project_plan, research)
             
-            print(f"✅ Generated {len(subtasks)} subtasks using specialized Project Planner agent")
+            print(f"✅ Generated {len(subtasks)} pragmatic subtasks (questioned and validated)")
             
         except Exception as e:
-            print(f"⚠️ Specialized planner agent failed: {e}")
-            print("🔄 Using default subtask generation...")
+            print(f"⚠️ Planner agent failed: {e}")
+            print("🔄 Using pragmatic fallback approach...")
             
-            # Fallback to default subtask generation
-            subtasks = self._parse_subtasks_from_plan("")
+            # Fallback with engineering principles
+            subtasks = self._generate_minimal_viable_subtasks(project_idea, requirements, research)
         
         return subtasks
+    
+    def _parse_subtasks_pragmatically(self, project_plan: str, research: ResearchResult) -> List[SubTask]:
+        """
+        Parse subtasks with engineering reality checks and pragmatic filtering.
+        
+        Args:
+            project_plan: The project plan text from the planner agent
+            research: Research context for validation
+        
+        Returns:
+            List of pragmatically filtered SubTask objects
+        """
+        print("🔍 Applying engineering reality checks to proposed tasks...")
+        
+        # First parse normally
+        initial_subtasks = self._parse_subtasks_from_plan(project_plan)
+        
+        # Apply pragmatic filtering
+        validated_subtasks = []
+        
+        for task in initial_subtasks:
+            # Reality check each task
+            validation = self._validate_task_necessity(task, research)
+            
+            if validation['keep']:
+                # Simplify if needed
+                simplified_task = self._simplify_task(task, validation['reasoning'])
+                validated_subtasks.append(simplified_task)
+                print(f"✅ Keeping task: {task.title} - {validation['reasoning']}")
+            else:
+                print(f"❌ Removing task: {task.title} - {validation['reasoning']}")
+        
+        # Ensure we have minimal viable set
+        if len(validated_subtasks) < 2:
+            print("⚠️ Too few tasks after filtering, adding minimal viable tasks...")
+            validated_subtasks.extend(self._get_minimal_viable_tasks())
+        
+        return validated_subtasks
+    
+    def _validate_task_necessity(self, task: SubTask, research: ResearchResult) -> dict:
+        """
+        Apply engineering questions to validate task necessity.
+        
+        Returns:
+            dict with 'keep' boolean and 'reasoning' string
+        """
+        # Core engineering questions
+        necessity_checks = {
+            'core_functionality': 'setup' in task.title.lower() or 'core' in task.title.lower() or 'implementation' in task.title.lower(),
+            'has_dependencies': len(task.dependencies) > 0,
+            'realistic_scope': task.estimated_hours <= 16.0,  # No mega-tasks
+            'essential_skills': len(task.skills_required) <= 4,  # Not over-complex
+            'clear_deliverable': len(task.description) > 20  # Has actual description
+        }
+        
+        score = sum(necessity_checks.values())
+        
+        if score >= 3:
+            return {'keep': True, 'reasoning': 'Essential task with clear deliverable'}
+        elif score >= 2 and necessity_checks['core_functionality']:
+            return {'keep': True, 'reasoning': 'Core functionality, simplified'}
+        else:
+            return {'keep': False, 'reasoning': 'Non-essential or over-complex task'}
+    
+    def _simplify_task(self, task: SubTask, reasoning: str) -> SubTask:
+        """
+        Simplify a task based on engineering principles.
+        """
+        # Cap time estimates at reasonable levels
+        simplified_hours = min(task.estimated_hours, 8.0)
+        
+        # Limit skill requirements to essentials
+        essential_skills = task.skills_required[:3] if len(task.skills_required) > 3 else task.skills_required
+        
+        # Focus description on deliverables
+        if 'comprehensive' in task.description.lower() or 'detailed' in task.description.lower():
+            task.description = task.description.replace('comprehensive', 'basic').replace('detailed', 'minimal')
+        
+        return SubTask(
+            title=task.title,
+            description=task.description,
+            estimated_hours=simplified_hours,
+            skills_required=essential_skills,
+            dependencies=task.dependencies,
+            agent_type=task.agent_type
+        )
+    
+    def _generate_minimal_viable_subtasks(self, project_idea: str, requirements: str, research: ResearchResult) -> List[SubTask]:
+        """
+        Generate absolute minimal viable subtasks when planner fails.
+        """
+        print("🎯 Generating minimal viable product approach...")
+        
+        return [
+            SubTask(
+                title="Minimal Setup",
+                description=f"Create basic project structure for {project_idea}. No over-engineering.",
+                estimated_hours=2.0,
+                skills_required=["basic_setup"],
+                dependencies=[],
+                agent_type="worker"
+            ),
+            SubTask(
+                title="Core Feature Implementation", 
+                description=f"Implement the essential functionality only. Skip bells and whistles.",
+                estimated_hours=6.0,
+                skills_required=["programming"],
+                dependencies=["Minimal Setup"],
+                agent_type="worker"
+            ),
+            SubTask(
+                title="Basic Validation",
+                description="Verify it works as expected. Manual testing is fine.",
+                estimated_hours=2.0,
+                skills_required=["testing"],
+                dependencies=["Core Feature Implementation"],
+                agent_type="testing"
+            )
+        ]
+    
+    def _get_minimal_viable_tasks(self) -> List[SubTask]:
+        """
+        Get the absolute minimum tasks for any project.
+        """
+        return [
+            SubTask(
+                title="Quick Setup",
+                description="Bare minimum setup to get started.",
+                estimated_hours=1.0,
+                skills_required=["basic"],
+                dependencies=[],
+                agent_type="worker"
+            )
+        ]
     
     def _parse_subtasks_from_plan(self, project_plan: str) -> List[SubTask]:
         """
@@ -960,6 +1200,131 @@ This master issue coordinates the overall project. Each subtask will be created 
             creator_name="Backend Supervisor Agent",
             assignee="Uh-X3L"  # Repository owner
         )
+    
+    def get_engineering_methodology(self) -> Dict[str, Any]:
+        """
+        Return the engineering excellence methodology for other agents to adopt.
+        
+        This systematizes the pragmatic questioning and validation approach
+        that should be applied across all agent interactions.
+        
+        Returns:
+            Dict containing the complete engineering methodology
+        """
+        return {
+            "approach": "pragmatic_engineering_excellence",
+            "core_principles": {
+                "necessity_questioning": "Do we actually need this complexity?",
+                "minimal_viable_start": "What's the smallest working version?", 
+                "scope_challenge": "Can this be simplified or combined?",
+                "reality_validation": "Do current systems support this complexity?",
+                "cost_awareness": "What's the maintenance overhead?",
+                "iterative_refinement": "Start minimal, expand based on real needs"
+            },
+            "validation_questions": [
+                "Is this core functionality or enhancement?",
+                "Can we use existing tools instead of building?",
+                "What's the simplest implementation?",
+                "Can this wait for a later iteration?",
+                "Who will maintain this long-term?",
+                "What's the real business value?"
+            ],
+            "implementation_filters": {
+                "time_limits": "Cap individual tasks at 8 hours max",
+                "skill_limits": "Limit to 3 essential skills per task",
+                "dependency_limits": "Minimize task dependencies",
+                "complexity_check": "Favor simple over comprehensive"
+            },
+            "decision_framework": {
+                "keep_if": ["Essential for core functionality", "Clear business value", "Realistic implementation"],
+                "simplify_if": ["Over-complex", "Too many dependencies", "Premature optimization"],
+                "reject_if": ["No clear value", "Over-engineered", "Maintenance nightmare"]
+            },
+            "output_expectations": {
+                "task_descriptions": "Focus on deliverables, not process",
+                "time_estimates": "Realistic with buffer for reality",
+                "documentation": "Essential information only",
+                "testing": "Appropriate to risk and scope"
+            }
+        }
+    
+    def apply_engineering_methodology_to_plan(self, plan: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Apply engineering methodology to validate and refine any project plan.
+        
+        Args:
+            plan: Any project plan dictionary
+            
+        Returns:
+            Refined plan with engineering rigor applied
+        """
+        methodology = self.get_engineering_methodology()
+        
+        print("🔧 Applying engineering methodology to plan...")
+        
+        # Add methodology validation to existing plan
+        plan["engineering_validation"] = {
+            "methodology_applied": methodology["approach"],
+            "validation_performed": True,
+            "reality_checks": [],
+            "simplifications_made": [],
+            "rejections": []
+        }
+        
+        # Apply reality checks to any tasks/subtasks in the plan
+        if "subtasks" in plan:
+            validated_tasks = []
+            for task in plan["subtasks"]:
+                validation = self._validate_task_with_methodology(task, methodology)
+                if validation["keep"]:
+                    validated_tasks.append(validation["task"])
+                    plan["engineering_validation"]["reality_checks"].append(validation["reasoning"])
+                else:
+                    plan["engineering_validation"]["rejections"].append(f"Rejected: {task.get('title', 'Unknown task')} - {validation['reasoning']}")
+            
+            plan["subtasks"] = validated_tasks
+            plan["engineering_validation"]["tasks_validated"] = len(validated_tasks)
+            plan["engineering_validation"]["tasks_rejected"] = len(plan["subtasks"]) - len(validated_tasks)
+        
+        return plan
+    
+    def _validate_task_with_methodology(self, task: Dict[str, Any], methodology: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Validate a single task against engineering methodology.
+        """
+        # Apply core principles
+        title = task.get("title", "")
+        description = task.get("description", "")
+        estimated_hours = task.get("estimated_hours", 0)
+        
+        # Reality checks
+        is_essential = any(keyword in title.lower() for keyword in ["core", "setup", "basic", "minimal"])
+        is_reasonable_scope = estimated_hours <= 8.0
+        has_clear_deliverable = len(description) > 20
+        
+        if is_essential and is_reasonable_scope and has_clear_deliverable:
+            return {
+                "keep": True,
+                "task": task,
+                "reasoning": f"Essential task with clear scope: {title}"
+            }
+        elif is_essential:
+            # Simplify essential task
+            simplified_task = task.copy()
+            simplified_task["estimated_hours"] = min(estimated_hours, 6.0)
+            simplified_task["description"] = simplified_task["description"].replace("comprehensive", "basic").replace("detailed", "minimal")
+            
+            return {
+                "keep": True, 
+                "task": simplified_task,
+                "reasoning": f"Essential task, simplified: {title}"
+            }
+        else:
+            return {
+                "keep": False,
+                "task": task,
+                "reasoning": f"Non-essential or over-complex: {title}"
+            }
 
 
 # Convenience functions for easy access
