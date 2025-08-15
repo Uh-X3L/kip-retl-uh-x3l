@@ -11,6 +11,10 @@ REPO = os.environ["GITHUB_REPO"]
 INSTALLATION_ID_ENV = os.environ.get("GITHUB_INSTALLATION_ID", "").strip()
 USER_AGENT = "ai-foundry-agent/1.0"
 
+# Load the private key
+with open(PRIVATE_KEY_PATH, 'r') as f:
+    PRIVATE_KEY = f.read()
+
 def _app_jwt() -> str:
     """ 
     This function creates a JSON Web Token (JWT) for the GitHub App.
@@ -280,6 +284,12 @@ def create_issue(inst_token: str, title: str, body="", assignees=None, labels=No
         payload["milestone"] = milestone
     
     r = requests.post(url, headers=_github_headers(inst_token), json=payload, timeout=30)
+    
+    if r.status_code >= 400:
+        print(f"[CREATE ISSUE ERR] {r.status_code} for issue creation")
+        print("Request payload:", json.dumps(payload, indent=2))
+        print("Response:", r.text)
+        
     r.raise_for_status()
     return r.json()
 
@@ -383,25 +393,7 @@ def create_labels_if_not_exist(inst_token: str, labels: List[Dict[str, str]]) ->
             
     return created_labels
 
-def get_user_info(inst_token: str, username: str) -> Optional[Dict[str, Any]]:
-    """
-    Gets user information to verify if user exists and can be assigned.
-    
-    Args:
-        inst_token (str): GitHub installation access token  
-        username (str): GitHub username to check
-        
-    Returns:
-        Optional[Dict[str, Any]]: User info if exists, None otherwise
-    """
-    try:
-        url = f"https://api.github.com/users/{username}"
-        r = requests.get(url, headers=_github_headers(inst_token), timeout=30)
-        if r.status_code == 200:
-            return r.json()
-        return None
-    except Exception:
-        return None
+
 
 def link_issues(inst_token: str, parent_issue_id: int, child_issue_ids: List[int], relation_type: str = "subtask") -> None:
     """
@@ -437,6 +429,27 @@ def link_issues(inst_token: str, parent_issue_id: int, child_issue_ids: List[int
         requests.post(child_url, headers=_github_headers(inst_token),
                      json={"body": child_comment}, timeout=30)
 
+def get_user_info(inst_token: str, username: str) -> Optional[Dict[str, Any]]:
+    """
+    Get GitHub user information to verify if user exists and can be assigned.
+    
+    Args:
+        inst_token (str): GitHub installation access token
+        username (str): GitHub username to look up
+        
+    Returns:
+        Optional[Dict[str, Any]]: User info dict or None if not found
+    """
+    try:
+        url = f"https://api.github.com/users/{username}"
+        r = requests.get(url, headers=_github_headers(inst_token), timeout=30)
+        if r.status_code == 200:
+            return r.json()
+        return None
+    except Exception as e:
+        print(f"❌ Error getting user info for {username}: {e}")
+        return None
+
 def resolve_installation_id() -> int:
     """
     Resolves the installation ID from environment variable or by querying GitHub API.
@@ -445,3 +458,219 @@ def resolve_installation_id() -> int:
         int: The GitHub App installation ID.
     """
     return int(INSTALLATION_ID_ENV) if INSTALLATION_ID_ENV.isdigit() else get_installation_id_for_repo()
+
+
+def create_project_issue_with_subtasks(
+    title: str,
+    description: str,
+    subtasks: List[Dict[str, Any]],
+    project_metadata: Optional[Dict[str, Any]] = None,
+    creator_name: str = "AI Agent",
+    assignee: Optional[str] = None
+) -> Dict[str, Any]:
+    """
+    Create a comprehensive GitHub issue with subtasks, labels, and project management features.
+    
+    Args:
+        title (str): Main issue title
+        description (str): Main issue description/body
+        subtasks (List[Dict]): List of subtask dictionaries with keys: title, description, estimated_hours, agent_type, skills_required, dependencies
+        project_metadata (Optional[Dict]): Additional project metadata (complexity, technologies, etc.)
+        creator_name (str): Name of the creating agent/system
+        assignee (Optional[str]): GitHub username to assign the main issue to
+        
+    Returns:
+        Dict[str, Any]: Enhanced result with main issue, sub-issues, and metadata
+    """
+    inst_id = resolve_installation_id()
+    tok = installation_token_cached(inst_id)
+    
+    total_hours = sum(float(task.get("estimated_hours", 0)) for task in subtasks)
+    total_tasks = len(subtasks)
+    
+    # Extract metadata
+    metadata = project_metadata or {}
+    complexity = metadata.get("complexity", "medium")
+    technologies = metadata.get("technologies", [])
+    agent_types = set(task.get("agent_type", "general") for task in subtasks)
+    
+    # 🏷️ Create project-specific labels
+    project_labels = [
+        {"name": creator_name.lower().replace(" ", "-"), "color": "7f00ff", "description": f"Created by {creator_name}"},
+        {"name": f"complexity-{complexity.lower()}", "color": _get_complexity_color(complexity), "description": f"Project complexity: {complexity}"},
+        {"name": "ai-project", "color": "00d4aa", "description": "AI-managed project"},
+        {"name": "has-subtasks", "color": "ffa500", "description": "Parent issue with sub-issues"}
+    ]
+    
+    # Add agent-type specific labels
+    for agent_type in agent_types:
+        project_labels.append({
+            "name": f"needs-{agent_type}",
+            "color": _get_agent_color(agent_type),
+            "description": f"Requires {agent_type} agent"
+        })
+    
+    print("🏷️ Creating project labels...")
+    created_labels = create_labels_if_not_exist(tok, project_labels)
+    
+    # Validate assignee
+    assignees = None
+    if assignee:
+        user_info = get_user_info(tok, assignee)
+        if user_info:
+            assignees = [assignee]
+            print(f"✅ Will assign issue to: {assignee}")
+        else:
+            print(f"⚠️ User '{assignee}' not found, creating issue without assignee")
+    
+    # Create main issue
+    print("📝 Creating main project issue...")
+    result = create_issue(
+        tok,
+        title=title,
+        body=description,
+        assignees=assignees,
+        labels=[label["name"] for label in project_labels if label["name"] in created_labels]
+    )
+    
+    main_issue_number = result["number"]
+    print(f"✅ Created main issue #{main_issue_number}: {result.get('html_url')}")
+    
+    # 🎯 Create sub-issues for each subtask
+    print(f"🔄 Creating {len(subtasks)} sub-issues...")
+    sub_issue_numbers = []
+    sub_issue_details = []
+    
+    for i, task in enumerate(subtasks, 1):
+        agent_type = task.get("agent_type", "general")
+        sub_issue_title = f"{_get_agent_emoji(agent_type)} {task['title']}"
+        
+        sub_issue_body = f"""## 🎯 Subtask Details
+
+**Parent Issue:** #{main_issue_number}
+**Agent Type:** {agent_type.title()}
+**Estimated Hours:** {task.get('estimated_hours', 0)}h
+**Skills Required:** {', '.join(task.get('skills_required', []))}
+
+### 📝 Description
+{task['description']}
+
+### ✅ Acceptance Criteria
+- [ ] Task implementation completed
+- [ ] Code follows project standards
+- [ ] Tests passing (if applicable)
+- [ ] Documentation updated (if applicable)
+- [ ] Peer review completed
+- [ ] Integration with main project verified
+
+### 🔗 Dependencies
+{chr(10).join([f"- {dep}" for dep in task.get('dependencies', [])]) if task.get('dependencies') else "None"}
+
+### 📊 Task Metadata
+- **Complexity:** Individual task within {complexity} project
+- **Technology Stack:** {', '.join(technologies[:3])}{'...' if len(technologies) > 3 else ''}
+- **Priority:** {_determine_task_priority(task, i, len(subtasks))}
+
+---
+*Sub-issue created by {creator_name}*
+"""
+        
+        # Create sub-issue with appropriate labels
+        sub_labels = [
+            creator_name.lower().replace(" ", "-"),
+            f"agent-{agent_type}",
+            "subtask",
+            f"complexity-{complexity.lower()}"
+        ]
+        
+        sub_result = create_issue(
+            tok,
+            title=sub_issue_title,
+            body=sub_issue_body,
+            labels=sub_labels
+        )
+        
+        sub_issue_numbers.append(sub_result["number"])
+        sub_issue_details.append({
+            "number": sub_result["number"],
+            "title": task["title"],
+            "html_url": sub_result.get("html_url"),
+            "labels": sub_labels,
+            "agent_type": agent_type
+        })
+        print(f"  ✅ Created sub-issue #{sub_result['number']}: {task['title']}")
+    
+    # 🔗 Link all sub-issues to the main issue
+    print("🔗 Linking sub-issues to main issue...")
+    link_issues(tok, main_issue_number, sub_issue_numbers, "subtask")
+    
+    # 📋 Try to add to project (optional)
+    project_id = os.environ.get("GITHUB_PROJECT_ID")
+    if project_id:
+        try:
+            print(f"📋 Adding main issue to project #{project_id}...")
+            add_issue_to_project(tok, main_issue_number, int(project_id), "To Do")
+            print("✅ Added main issue to project")
+        except Exception as e:
+            print(f"⚠️ Could not add to project: {e}")
+    
+    # Return enhanced result with sub-issue information
+    return {
+        **result,
+        "sub_issues": sub_issue_details,
+        "total_issues_created": len(sub_issue_numbers) + 1,
+        "labels_created": created_labels,
+        "main_issue_number": main_issue_number,
+        "sub_issue_numbers": sub_issue_numbers,
+        "total_estimated_hours": total_hours,
+        "agent_types": list(agent_types)
+    }
+
+
+def _get_complexity_color(complexity: str) -> str:
+    """Get color code for complexity label."""
+    colors = {
+        "low": "28a745",
+        "medium": "ffc107", 
+        "high": "fd7e14",
+        "expert": "dc3545"
+    }
+    return colors.get(complexity.lower(), "6c757d")
+
+
+def _get_agent_color(agent_type: str) -> str:
+    """Get color code for agent type label."""
+    colors = {
+        "worker": "0366d6",
+        "testing": "28a745",
+        "documentation": "6f42c1",
+        "research": "e36209",
+        "devops": "d73a49",
+        "general": "6c757d"
+    }
+    return colors.get(agent_type, "6c757d")
+
+
+def _get_agent_emoji(agent_type: str) -> str:
+    """Get emoji for agent type."""
+    emojis = {
+        "worker": "🔨",
+        "testing": "🧪",
+        "documentation": "📚", 
+        "research": "🔍",
+        "devops": "🚀",
+        "general": "⚙️"
+    }
+    return emojis.get(agent_type, "⚙️")
+
+
+def _determine_task_priority(task: Dict[str, Any], position: int, total: int) -> str:
+    """Determine task priority based on position and dependencies."""
+    if task.get("dependencies"):
+        return "High"  # Tasks with dependencies are high priority
+    elif position <= total * 0.3:
+        return "High"  # First 30% of tasks
+    elif position <= total * 0.7:
+        return "Medium" # Middle 40% of tasks
+    else:
+        return "Low"   # Last 30% of tasks
