@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  ai-agent-backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: production
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - ai-agent-network
+    secrets:
+      - github_private_key
+      - azure_credentials
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../config/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+    networks:
+      - ai-agent-network
+    depends_on:
+      - ai-agent-backend
+
+secrets:
+  github_private_key:
+    external: true
+  azure_credentials:
+    external: true
+
+networks:
+  ai-agent-network:
+    external: true

@@ -1,0 +1,78 @@
+name: 🔍 Pull Request Checks
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  pr-validation:
+    name: 📋 PR Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 🏷️ Check PR title format
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            test
+            chore
+            
+      - name: 📝 Check for required files
+        run: |
+          echo "Checking for required files..."
+          required_files=(
+            "src/backend/main.py"
+            "src/frontend/package.json"
+            "docker/Dockerfile"
+            "infrastructure/terraform/main.tf"
+          )
+          
+          for file in "${required_files[@]}"; do
+            if [[ -f "$file" ]]; then
+              echo "✅ Found: $file"
+            else
+              echo "❌ Missing: $file"
+              exit 1
+            fi
+          done
+          
+      - name: 📊 Comment PR size
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            const additions = files.reduce((sum, file) => sum + file.additions, 0);
+            const deletions = files.reduce((sum, file) => sum + file.deletions, 0);
+            
+            let size = 'small';
+            if (additions + deletions > 500) size = 'large';
+            else if (additions + deletions > 100) size = 'medium';
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `📊 **PR Size Analysis**
+              
+              - 📈 Additions: ${additions}
+              - 📉 Deletions: ${deletions} 
+              - 📏 Size: ${size}
+              
+              ${size === 'large' ? '⚠️ This is a large PR. Consider breaking it down.' : '✅ Good PR size!'}
+              `
+            });

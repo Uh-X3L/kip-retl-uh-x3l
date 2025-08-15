@@ -1,0 +1,18 @@
+# Development Environment Configuration
+environment: development
+debug: true
+
+app:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true
+
+database:
+  host: "localhost"
+  port: 5432
+  name: "ai_agents_dev"
+
+agents:
+  optimization_enabled: true
+  reuse_threshold: 0.8
+  max_cached_agents: 50

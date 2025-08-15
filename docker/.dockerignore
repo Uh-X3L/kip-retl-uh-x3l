@@ -1,0 +1,49 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+docs/
+
+# Development files
+*.log
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+build/
+*.tgz
+*.tar.gz
+
+# Test files
+coverage/
+.coverage
+.nyc_output
+
+# Temporary files
+tmp/
+temp/
