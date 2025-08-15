@@ -1,31 +1,16 @@
-# Environment Configuration
-environment = "development"
-location    = "East US 2"
+# Simplified Configuration for Azure SQL Setup
+location = "UK South"
 
 # Resource Names
-resource_group_name              = "ai-agent-dev-rg"
-container_registry_name          = "aiagentdevacr"
-container_app_environment_name   = "ai-agent-dev-env"
-container_app_backend_name       = "ai-agent-dev-backend"
+resource_group_name = "rg-ai-agent-uks-001"
 
-# Database Configuration
-postgresql_server_name    = "ai-agent-dev-postgresql"
-postgresql_database_name  = "ai_agents_dev"
-postgresql_admin_username = "adminuser"
-# postgresql_admin_password will be auto-generated
-
-# Cache Configuration
-redis_cache_name = "ai-agent-dev-redis"
-
-# Monitoring Configuration
-log_analytics_name        = "ai-agent-dev-logs"
-application_insights_name = "ai-agent-dev-insights"
+# Azure SQL Configuration (fill in your existing Azure SQL details)
+sql_server_name     = "your-existing-sql-server"
+sql_database_name   = "your-existing-database"
+sql_server_fqdn     = "your-server.database.windows.net"
 
 # Tags
 tags = {
-  Environment = "development"
-  Project     = "AI-Agent-System"
-  ManagedBy   = "Terraform"
-  Owner       = "Development-Team"
-  CostCenter  = "Engineering"
+  project    = "ai-agent-system"
+  managed-by = "terraform"
 }
