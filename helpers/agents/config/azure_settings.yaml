@@ -1,0 +1,224 @@
+"""
+Azure AI Projects Configuration - Settings for Azure integration
+
+This file contains Azure-specific configurations for the agent management system,
+including connection settings, resource limits, and optimization parameters.
+"""
+
+# Azure AI Projects Configuration
+azure:
+  # Connection settings (loaded from environment variables)
+  project_endpoint: "${PROJECT_ENDPOINT}"
+  model_deployment: "${MODEL_DEPLOYMENT_NAME}"
+  
+  # Authentication
+  credential_type: "azure_cli"  # or "managed_identity", "service_principal"
+  
+  # Agent lifecycle management
+  lifecycle:
+    # Maximum time an agent can be idle before cleanup (in seconds)
+    max_idle_time: 3600  # 1 hour
+    
+    # Maximum number of agents of each type to cache
+    max_agents_per_type: 3
+    
+    # Cleanup interval (in seconds)
+    cleanup_interval: 1800  # 30 minutes
+    
+    # Enable automatic agent reuse
+    enable_reuse: true
+    
+    # Agent matching threshold (0.0 to 1.0)
+    reuse_threshold: 0.8
+
+  # Performance optimization
+  performance:
+    # Connection timeout (in seconds)
+    connection_timeout: 30
+    
+    # Request timeout (in seconds)
+    request_timeout: 120
+    
+    # Maximum concurrent agents
+    max_concurrent_agents: 10
+    
+    # Enable request batching
+    enable_batching: true
+    
+    # Batch size for concurrent operations
+    batch_size: 5
+
+  # Resource management
+  resources:
+    # Maximum memory usage per agent (in MB)
+    max_memory_per_agent: 512
+    
+    # Maximum API calls per minute per agent
+    max_api_calls_per_minute: 60
+    
+    # Enable resource monitoring
+    enable_monitoring: true
+    
+    # Resource usage alerts
+    memory_alert_threshold: 400  # MB
+    api_rate_alert_threshold: 50  # calls per minute
+
+  # Retry configuration
+  retry:
+    # Maximum number of retries for failed operations
+    max_retries: 3
+    
+    # Base delay between retries (in seconds)
+    base_delay: 2
+    
+    # Exponential backoff multiplier
+    backoff_multiplier: 2.0
+    
+    # Maximum delay between retries (in seconds)
+    max_delay: 60
+
+  # Caching configuration
+  cache:
+    # Enable response caching
+    enable_response_cache: true
+    
+    # Cache duration for research results (in seconds)
+    research_cache_duration: 3600  # 1 hour
+    
+    # Cache duration for planning results (in seconds)
+    planning_cache_duration: 1800  # 30 minutes
+    
+    # Cache size limit (number of entries)
+    max_cache_size: 1000
+    
+    # Cache cleanup threshold (percentage full before cleanup)
+    cleanup_threshold: 0.8
+
+  # Logging configuration
+  logging:
+    # Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    level: "INFO"
+    
+    # Enable detailed performance logging
+    enable_performance_logs: true
+    
+    # Log file path (optional, defaults to stdout)
+    log_file: null
+    
+    # Maximum log file size (in MB)
+    max_log_size: 100
+    
+    # Number of log files to keep
+    log_backup_count: 5
+
+  # Security configuration
+  security:
+    # Enable request validation
+    enable_request_validation: true
+    
+    # Maximum input size (in characters)
+    max_input_size: 50000
+    
+    # Enable content filtering
+    enable_content_filtering: true
+    
+    # Allowed file extensions for uploads
+    allowed_file_extensions:
+      - ".txt"
+      - ".md"
+      - ".json"
+      - ".yaml"
+      - ".yml"
+    
+    # Maximum file size for uploads (in MB)
+    max_file_size: 10
+
+  # Monitoring and analytics
+  monitoring:
+    # Enable usage analytics
+    enable_analytics: true
+    
+    # Analytics reporting interval (in seconds)
+    reporting_interval: 3600  # 1 hour
+    
+    # Enable performance metrics collection
+    enable_metrics: true
+    
+    # Metrics retention period (in days)
+    metrics_retention_days: 30
+
+# Registry configuration
+registry:
+  # Registry file path
+  file_path: "helpers/config/agent_registry.json"
+  
+  # Auto-save interval (in seconds)
+  auto_save_interval: 300  # 5 minutes
+  
+  # Enable backup
+  enable_backup: true
+  
+  # Backup interval (in seconds)
+  backup_interval: 86400  # 24 hours
+  
+  # Maximum number of backups to keep
+  max_backups: 7
+
+# Agent-specific overrides
+agent_overrides:
+  web_research_analyst:
+    performance:
+      timeout: 150  # Extended timeout for research
+      max_retries: 3
+    resources:
+      max_memory_per_agent: 768  # Higher memory for research
+      max_api_calls_per_minute: 40  # Lower rate limit due to research intensity
+  
+  devops_agent:
+    performance:
+      timeout: 180  # Extended timeout for infrastructure operations
+      max_retries: 2
+    resources:
+      max_memory_per_agent: 1024  # Higher memory for complex operations
+      max_api_calls_per_minute: 30  # Lower rate limit for infrastructure calls
+  
+  project_planner:
+    performance:
+      timeout: 120
+      max_retries: 2
+    cache:
+      planning_cache_duration: 2400  # 40 minutes for planning results
+
+# Development/debugging settings
+debug:
+  # Enable debug mode
+  enabled: false
+  
+  # Enable agent creation logging
+  log_agent_creation: true
+  
+  # Enable performance profiling
+  enable_profiling: false
+  
+  # Save debug information to files
+  save_debug_info: false
+  
+  # Debug output directory
+  debug_output_dir: "debug_output"
+
+# Feature flags
+features:
+  # Enable experimental agent types
+  enable_experimental_agents: false
+  
+  # Enable multi-agent workflows
+  enable_multi_agent_workflows: true
+  
+  # Enable agent collaboration
+  enable_agent_collaboration: true
+  
+  # Enable automatic issue assignment
+  enable_auto_issue_assignment: true
+  
+  # Enable DevOps agent Issue #70 specialization
+  enable_devops_issue_70_specialization: true
