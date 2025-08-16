@@ -1,14 +1,14 @@
 {
   "web_research_analyst": {
-    "total_requests": 1,
-    "reuse_count": 0,
+    "total_requests": 3,
+    "reuse_count": 2,
     "creation_count": 1,
-    "last_used": "2025-08-16T01:22:01.568604"
+    "last_used": "2025-08-16T11:12:24.712008"
   },
   "project_planner": {
-    "total_requests": 1,
-    "reuse_count": 0,
+    "total_requests": 3,
+    "reuse_count": 2,
     "creation_count": 1,
-    "last_used": "2025-08-16T01:22:13.980978"
+    "last_used": "2025-08-16T11:12:37.493006"
   }
 }

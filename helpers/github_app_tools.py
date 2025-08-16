@@ -512,8 +512,12 @@ def create_project_issue_with_subtasks(
     agent_types = set(task.get("agent_type", "general") for task in subtasks)
 
     # 🏷️ Create project-specific labels
+    creator_label = creator_name.lower().replace(" ", "-")
+    if len(creator_label) > 45:  # Leave room for other characters
+        creator_label = creator_label[:42] + "..."
+        
     project_labels = [
-        {"name": creator_name.lower().replace(" ", "-"), "color": "7f00ff", "description": f"Created by {creator_name}"},
+        {"name": creator_label, "color": "7f00ff", "description": f"Created by {creator_name}"},
         {"name": f"complexity-{complexity}", "color": _get_complexity_color(complexity), "description": f"Project complexity: {complexity}"},
         {"name": "ai-project", "color": "00d4aa", "description": "AI-managed project"},
         {"name": "has-subtasks", "color": "ffa500", "description": "Parent issue with sub-issues"}
@@ -584,7 +588,7 @@ def create_project_issue_with_subtasks(
 {chr(10).join([f"- {dep}" for dep in task.get('dependencies', [])]) if task.get('dependencies') else "None"}
 
 ### 📊 Task Metadata
-- **Complexity:** Individual task within {complexity} project
+- **Complexity:** Individual task within {complexity.title()} project
 - **Technology Stack:** {', '.join(technologies[:3])}{'...' if len(technologies) > 3 else ''}
 - **Priority:** {_determine_task_priority(task, i, len(subtasks))}
 
@@ -593,8 +597,12 @@ def create_project_issue_with_subtasks(
 """
         
         # Create sub-issue with appropriate labels
+        creator_label = creator_name.lower().replace(" ", "-")
+        if len(creator_label) > 45:  # Leave room for other characters
+            creator_label = creator_label[:42] + "..."
+            
         sub_labels = [
-            creator_name.lower().replace(" ", "-"),
+            creator_label,
             f"agent-{agent_type}",
             "subtask",
             f"complexity-{complexity}"

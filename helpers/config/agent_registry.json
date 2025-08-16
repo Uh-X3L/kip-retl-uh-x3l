@@ -8,8 +8,8 @@
       "instructions_hash": -7280639373210557785,
       "tools_count": 0,
       "created_at": "2025-08-16T01:22:01.567534",
-      "last_used": "2025-08-16T01:22:01.567534",
-      "usage_count": 1,
+      "last_used": "2025-08-16T11:12:24.701439",
+      "usage_count": 3,
       "status": "active"
     },
     {
@@ -20,8 +20,8 @@
       "instructions_hash": 1999923740417880850,
       "tools_count": 0,
       "created_at": "2025-08-16T01:22:13.980978",
-      "last_used": "2025-08-16T01:22:13.980978",
-      "usage_count": 1,
+      "last_used": "2025-08-16T11:12:37.473038",
+      "usage_count": 3,
       "status": "active"
     }
   ],
