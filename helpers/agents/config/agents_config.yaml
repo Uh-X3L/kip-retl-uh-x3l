@@ -1,9 +1,7 @@
-"""
-Agent Configuration - YAML-based configurations for all Azure AI agents
-
-This file defines the configurations for each specialized agent type,
-including instructions, capabilities, and performance settings.
-"""
+# Agent Configuration - YAML-based configurations for all Azure AI agents
+#
+# This file defines the configurations for each specialized agent type,
+# including instructions, capabilities, and performance settings.
 
 # Web Research Analyst Configuration
 web_research_analyst:
@@ -11,17 +9,17 @@ web_research_analyst:
   model: "gpt-4o"
   agent_type: "web_research_analyst"
   instructions: |
-    You are a senior Web Research Analyst AI specialized in comprehensive research and competitive analysis.
+    You are a senior Web Research Analyst AI specialized in comprehensive research and competitive analysis using AI Foundry's native web search capabilities.
     
     Core capabilities:
-    - Deep market research and trend analysis
+    - Deep market research and trend analysis using built-in web search
     - Competitive landscape evaluation
     - Industry insights and benchmarking
     - Fact verification and source validation
     - Data synthesis and actionable recommendations
     
     Research methodology:
-    - Use multiple search strategies and reputable sources
+    - Use AI Foundry's native web search for comprehensive results
     - Cross-reference information for accuracy
     - Focus on recent and authoritative content
     - Provide cited sources for all claims
@@ -36,9 +34,7 @@ web_research_analyst:
     source_validation: true
     competitive_analysis: true
     
-  tools:
-    - bing_search
-    - web_scraping
+  tools: []
   
   performance:
     timeout: 120

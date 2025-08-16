@@ -365,6 +365,11 @@ def create_labels_if_not_exist(inst_token: str, labels: List[Dict[str, str]]) ->
     
     for label in labels:
         label_name = label["name"]
+        # GitHub labels have a 50 character limit
+        if len(label_name) > 50:
+            print(f"⚠️ Label name too long (>{len(label_name)} chars), truncating: {label_name}")
+            label_name = label_name[:47] + "..."
+            
         url = f"https://api.github.com/repos/{owner}/{repo}/labels"
         
         # Check if label exists
@@ -490,14 +495,26 @@ def create_project_issue_with_subtasks(
     
     # Extract metadata
     metadata = project_metadata or {}
-    complexity = metadata.get("complexity", "medium")
+    complexity_raw = metadata.get("complexity", "medium")
+    # Ensure complexity is just the basic level (truncate long descriptions)
+    if isinstance(complexity_raw, str):
+        complexity_words = complexity_raw.lower().split()
+        if any(word in complexity_words for word in ["low", "simple", "easy"]):
+            complexity = "low"
+        elif any(word in complexity_words for word in ["high", "complex", "difficult", "expert"]):
+            complexity = "high"
+        else:
+            complexity = "medium"  # Default for anything with "medium" or unrecognized
+    else:
+        complexity = "medium"
+    
     technologies = metadata.get("technologies", [])
     agent_types = set(task.get("agent_type", "general") for task in subtasks)
-    
+
     # 🏷️ Create project-specific labels
     project_labels = [
         {"name": creator_name.lower().replace(" ", "-"), "color": "7f00ff", "description": f"Created by {creator_name}"},
-        {"name": f"complexity-{complexity.lower()}", "color": _get_complexity_color(complexity), "description": f"Project complexity: {complexity}"},
+        {"name": f"complexity-{complexity}", "color": _get_complexity_color(complexity), "description": f"Project complexity: {complexity}"},
         {"name": "ai-project", "color": "00d4aa", "description": "AI-managed project"},
         {"name": "has-subtasks", "color": "ffa500", "description": "Parent issue with sub-issues"}
     ]
@@ -580,7 +597,7 @@ def create_project_issue_with_subtasks(
             creator_name.lower().replace(" ", "-"),
             f"agent-{agent_type}",
             "subtask",
-            f"complexity-{complexity.lower()}"
+            f"complexity-{complexity}"
         ]
         
         sub_result = create_issue(

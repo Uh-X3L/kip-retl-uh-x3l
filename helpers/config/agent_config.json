@@ -1,0 +1,7 @@
+{
+  "agent_cleanup_days": 7,
+  "max_agents_per_type": 3,
+  "reuse_threshold_hours": 1,
+  "performance_tracking": true,
+  "auto_cleanup": true
+}

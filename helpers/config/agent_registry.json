@@ -1,0 +1,29 @@
+{
+  "agents": [
+    {
+      "agent_id": "asst_krSqtOrqezlwFv5DxNhpwRdq",
+      "name": "web_research_analyst",
+      "agent_type": "researcher",
+      "model": "gpt-4o",
+      "instructions_hash": -7280639373210557785,
+      "tools_count": 0,
+      "created_at": "2025-08-16T01:22:01.567534",
+      "last_used": "2025-08-16T01:22:01.567534",
+      "usage_count": 1,
+      "status": "active"
+    },
+    {
+      "agent_id": "asst_cRfPMcmG5JFh1VKzt67kvCPB",
+      "name": "project_planner",
+      "agent_type": "planner",
+      "model": "gpt-4o",
+      "instructions_hash": 1999923740417880850,
+      "tools_count": 0,
+      "created_at": "2025-08-16T01:22:13.980978",
+      "last_used": "2025-08-16T01:22:13.980978",
+      "usage_count": 1,
+      "status": "active"
+    }
+  ],
+  "created_at": "2025-08-16T01:22:01.567534"
+}
