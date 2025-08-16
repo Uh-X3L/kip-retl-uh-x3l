@@ -1,85 +1,92 @@
-# Autonomous Agent Communication and Coordination System
+# Agent Communication System
 
+![Redis](https://img.shields.io/badge/redis-streams-red.svg)
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
-![Azure SQL](https://img.shields.io/badge/Azure-SQL-blue.svg)
-![Status](https://img.shields.io/badge/status-production--ready-green.svg)
 
-> **Minimal Viable Communication Protocol for Autonomous Agent Coordination**
+> **Minimal Redis-based messaging for autonomous agents**
 
-This system provides a robust, scalable foundation for autonomous agent communication using Azure SQL Server as the central message store. Agents can discover each other, coordinate tasks, and maintain system-wide awareness through a JSON-based messaging protocol.
+Simple, fast agent communication using Redis Streams with optional file logging.
 
-## 🎯 Features
+## Quick Start
 
-### Core Capabilities
-- **📨 JSON-based Message Protocol** - Structured communication with serialization
-- **🗄️ Azure SQL Message Store** - Centralized, persistent message queue
-- **🤖 Agent Registry** - Dynamic agent discovery and capability matching
-- **📋 Task Coordination** - Automated task assignment and load balancing
-- **📊 Supervisor Coordination** - Centralized orchestration and monitoring
-- **🔄 Mock Mode Support** - Development and testing without database
+```bash
+# Start Redis
+docker run -d --name redis-agent-queue -p 6379:6379 redis:7-alpine
 
-### Production Features
-- **🔐 Enterprise Security** - Entra ID authentication and role-based access
-- **📈 Performance Monitoring** - Comprehensive metrics and health checks
-- **🛠️ Maintenance Tools** - Automated cleanup and system optimization
-- **🔄 Error Recovery** - Robust error handling and retry mechanisms
-- **📊 Load Balancing** - Intelligent agent selection and task distribution
-
-## 🏗️ Architecture
-
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  Supervisor     │    │  Worker Agent   │    │  Worker Agent   │
-│  Coordinator    │    │    (Python)     │    │ (JavaScript)    │
-└─────────┬───────┘    └─────────┬───────┘    └─────────┬───────┘
-          │                      │                      │
-          └──────────────────────┼──────────────────────┘
-                                 │
-          ┌─────────────────────────────────────────────┐
-          │           Azure SQL Database                │
-          │  ┌─────────────┐  ┌─────────────────────┐   │
-          │  │   Message   │  │   Agent Registry    │   │
-          │  │    Queue    │  │   & Coordination    │   │
-          │  └─────────────┘  └─────────────────────┘   │
-          └─────────────────────────────────────────────┘
+# Run demo
+python demo.py
 ```
 
-## 🚀 Quick Start
+## Architecture
 
-### Installation
+```
+Agent A ──┐
+          ├──→ Redis Streams ←──┐
+Agent B ──┘                    ├── Agent C
+                               └── Agent D
+```
 
-1. **Install Dependencies**
-   ```bash
-   pip install pyodbc pandas azure-identity azure-keyvault-secrets
-   ```
+## Core Components
 
-2. **Setup Database** (Optional - can use mock mode)
-   ```bash
-   # Deploy schema to Azure SQL
-   sqlcmd -S your-server.database.windows.net -d agent-communication -U admin -i schema.sql
-   ```
+- **`MessageQueueManager`** - Send/receive messages via Redis Streams
+- **`AgentMessage`** - Message protocol (JSON-based)
+- **`AgentRegistry`** - In-memory agent discovery
+- **File Logging** - Optional audit trails (disabled by default)
 
-3. **Configure Environment**
-   ```bash
-   # Create .env file
-   AZURE_SQL_SERVER=your-server.database.windows.net
-   AZURE_SQL_DATABASE=agent-communication
-   AGENT_COMMUNICATION_MODE=mock  # or 'sql' for production
-   ```
-
-### Basic Usage
+## Basic Usage
 
 ```python
-from helpers.agent_communication import SupervisorCoordinator, AgentRole
+from queue_manager import MessageQueueManager
+from message_protocol import AgentMessage, MessageType
 
-# Initialize coordinator
-coordinator = SupervisorCoordinator("my-supervisor")
+# Initialize
+queue = MessageQueueManager()
 
-# Register a worker agent
-coordinator.agent_registry.register_agent(
-    agent_id="worker-python-01",
-    agent_role=AgentRole.WORKER,
-    capabilities=["python", "api_development", "testing"],
+# Send message
+message = AgentMessage(
+    from_agent="agent_001",
+    to_agent="agent_002", 
+    message_type=MessageType.TASK_ASSIGNMENT,
+    content={"task": "process_data"}
+)
+queue.send_message(message)
+
+# Receive messages
+messages = queue.get_messages("agent_002")
+for msg in messages:
+    print(f"From: {msg.from_agent}, Content: {msg.content}")
+    queue.mark_processed(msg.message_id, "agent_002")
+```
+
+## Optional File Logging
+
+```python
+from file_logger import enable_file_logging
+
+# Enable for audit trails (disabled by default)
+enable_file_logging("./logs")
+
+# Creates daily JSON files:
+# - agent_activity_YYYY-MM-DD.jsonl
+# - message_audit_YYYY-MM-DD.jsonl  
+# - task_history_YYYY-MM-DD.jsonl
+```
+
+## Message Types
+
+- `TASK_ASSIGNMENT` - Assign work to agents
+- `TASK_RESPONSE` - Task completion results
+- `STATUS_UPDATE` - Agent status changes
+- `HEARTBEAT` - Keep-alive signals
+- `ERROR_REPORT` - Error notifications
+
+## Requirements
+
+- Python 3.8+
+- Redis 7+ (optional - has mock mode)
+- `redis` package for Python
+
+That's it! Simple messaging for autonomous agents.
     max_concurrent_tasks=3
 )
 
@@ -398,6 +405,76 @@ class MessageQueueManager:
     def mark_processed(self, message_id: str, agent_id: str) -> bool
     def get_queue_stats(self) -> Dict[str, Any]
 ```
+
+## 📁 Optional File Logging
+
+The system includes optional file-based logging for audit trails, performance metrics, and compliance requirements. All data is stored as JSON Lines files organized by date.
+
+### Enable File Logging
+```python
+from helpers.agent_communication.file_logger import enable_file_logging
+
+# Enable file logging with custom directory
+file_logger = enable_file_logging(base_dir="./logs")
+
+# File logging is now active - all agent activities will be logged
+```
+
+### File Structure
+```
+logs/
+├── 2024-01-15/
+│   ├── agent_activity_2024-01-15.jsonl      # Agent registrations, status changes
+│   ├── message_audit_2024-01-15.jsonl       # Message send/receive/process events
+│   ├── task_history_2024-01-15.jsonl        # Task assignments and completions
+│   ├── performance_2024-01-15.jsonl         # Performance metrics and timings
+│   └── errors_2024-01-15.jsonl              # Error tracking and diagnostics
+├── 2024-01-16/
+│   └── ...
+└── 2024-01-17/
+    └── ...
+```
+
+### Log Entry Examples
+```json
+// agent_activity_2024-01-15.jsonl
+{"agent_id": "agent_001", "event": "registered", "data": {"agent_role": "coordinator", "capabilities": ["planning"]}, "timestamp": "2024-01-15T10:30:00Z"}
+
+// message_audit_2024-01-15.jsonl
+{"message_id": "msg_123", "from_agent": "agent_001", "to_agent": "agent_002", "message_type": "task_assignment", "event": "sent", "timestamp": "2024-01-15T10:31:00Z"}
+
+// task_history_2024-01-15.jsonl
+{"task_id": "task_456", "agent_id": "agent_002", "event": "completed", "data": {"duration_ms": 1250, "success": true}, "timestamp": "2024-01-15T10:32:15Z"}
+```
+
+### File Logging API
+```python
+from helpers.agent_communication.file_logger import get_file_logger
+
+# Get logger instance
+logger = get_file_logger()
+
+# Manual logging (automatic logging is handled by MessageQueueManager)
+logger.log_agent_activity("agent_001", "status_change", {"new_status": "busy"})
+logger.log_performance_metric("agent_001", "response_time", 125.5, "ms")
+logger.log_error("agent_001", "connection_error", "Redis connection failed")
+
+# Get logging statistics
+stats = logger.get_log_stats()
+print(f"Log files: {stats['log_files']}")
+
+# Clean up old logs (optional)
+logger.cleanup_old_logs(days_to_keep=30)
+```
+
+### Benefits of File Logging
+- **Audit Trails**: Complete record of all agent activities and communications
+- **Performance Analysis**: Detailed metrics for system optimization
+- **Compliance**: Structured logs for regulatory requirements
+- **Debugging**: Historical data for troubleshooting and error analysis
+- **Analytics**: JSON Lines format for easy data processing and visualization
+
+**Note**: File logging is optional and disabled by default for performance. Enable only when audit trails or compliance logging is required.
 
 #### `AgentRegistry`
 ```python

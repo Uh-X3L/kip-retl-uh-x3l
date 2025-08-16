@@ -18,6 +18,9 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from enum import Enum
+import os
+import json
+import time
 
 from dotenv import load_dotenv
 from azure.identity import AzureCliCredential
@@ -148,6 +151,8 @@ class BackendSupervisorAgent:
     - Challenges assumptions and validates real-world needs
     - Focuses on minimal viable implementations first
     
+    Now integrates with simplified agent coordination system!
+    
     Personality Traits:
     - Pragmatic: "Do we actually need this?"
     - Cost-conscious: "What's the simplest approach?"
@@ -159,7 +164,7 @@ class BackendSupervisorAgent:
     def __init__(self):
         """
         Initialize the Backend Supervisor Agent with agent management capabilities.
-        Now with intelligent agent reuse and specialized modules!
+        Now with intelligent agent reuse and simplified coordination!
         """
         self.research_cache = {}
         
@@ -173,7 +178,38 @@ class BackendSupervisorAgent:
         # Initialize agent manager for intelligent agent reuse
         self.agent_manager = AgentManager(self.project_client)
         
+        # Initialize simple coordination if available
+        self.coordinator = None
+        try:
+            from simple_agent_coordinator import SimpleAgentCoordinator
+            self.coordinator = SimpleAgentCoordinator("backend-supervisor-coordinator")
+            print("🎯 Simple agent coordination enabled!")
+        except ImportError:
+            print("ℹ️ Simple coordination not available, using direct agent management")
+        
         print("🚀 Backend Supervisor Agent initialized with Agent Optimization System!")
+    
+    def coordinate_comprehensive_project(self, project_idea: str, requirements: str = "") -> Dict[str, Any]:
+        """
+        Use the simplified coordinator for comprehensive project management.
+        This is the new preferred method that integrates supervisor with agents.
+        
+        Args:
+            project_idea: The project to coordinate
+            requirements: Additional requirements
+            
+        Returns:
+            Complete coordination results
+        """
+        print(f"🎯 Coordinating comprehensive project with simplified system: {project_idea}")
+        
+        if self.coordinator:
+            # Use the simplified coordinator which integrates supervisor + agents + messaging
+            return self.coordinator.coordinate_project(project_idea, requirements)
+        else:
+            # Fallback to direct comprehensive project creation
+            print("ℹ️ Using fallback direct project creation")
+            return self.create_comprehensive_project(project_idea, requirements)
     
     def create_devops_solution(self, project_type: str = "python_web_app", requirements: Dict[str, Any] = None) -> Dict[str, Any]:
         """

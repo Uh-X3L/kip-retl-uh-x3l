@@ -3,7 +3,7 @@ Agent Communication Protocol
 ============================
 
 Core message structures and types for autonomous agent communication.
-Uses JSON-based messaging with Azure SQL Server as the message store.
+Uses JSON-based messaging with Redis Streams for high-performance messaging.
 """
 
 import json
@@ -24,16 +24,6 @@ class MessageType(Enum):
     COMPLETION = "completion"
     HEARTBEAT = "heartbeat"
     BROADCAST = "broadcast"
-
-
-class AgentRole(Enum):
-    """Agent roles in the system"""
-    SUPERVISOR = "supervisor"
-    WORKER = "worker"
-    RESEARCHER = "researcher"
-    TESTER = "tester"
-    DEVOPS = "devops"
-    DOCUMENTATION = "documentation"
 
 
 class MessagePriority(Enum):
@@ -106,83 +96,3 @@ class AgentMessage:
             parent_message_id=self.message_id,
             priority=self.priority
         )
-
-
-@dataclass
-class TaskRequest:
-    """Structured task request content"""
-    task_id: str
-    task_type: str
-    description: str
-    parameters: Dict[str, Any]
-    deadline: Optional[str] = None
-    required_capabilities: List[str] = None
-    
-    def __post_init__(self):
-        if self.required_capabilities is None:
-            self.required_capabilities = []
-
-
-@dataclass
-class TaskResponse:
-    """Structured task response content"""
-    task_id: str
-    status: str  # completed, failed, in_progress
-    result: Optional[Dict[str, Any]] = None
-    error_message: Optional[str] = None
-    progress: Optional[float] = None  # 0.0 to 1.0
-    next_steps: Optional[List[str]] = None
-
-
-@dataclass
-class StatusUpdate:
-    """Agent status update content"""
-    agent_id: str
-    status: str  # active, idle, busy, offline
-    current_task: Optional[str] = None
-    capabilities: Optional[List[str]] = None
-    load_factor: Optional[float] = None  # 0.0 to 1.0
-
-
-def create_task_request_message(
-    from_agent: str,
-    to_agent: str,
-    task_request: TaskRequest,
-    priority: MessagePriority = MessagePriority.MEDIUM
-) -> AgentMessage:
-    """Helper function to create a task request message"""
-    return AgentMessage(
-        message_id=str(uuid.uuid4()),
-        from_agent=from_agent,
-        to_agent=to_agent,
-        message_type=MessageType.TASK_REQUEST,
-        content=asdict(task_request),
-        priority=priority
-    )
-
-
-def create_broadcast_message(
-    from_agent: str,
-    content: Dict[str, Any],
-    message_type: MessageType = MessageType.BROADCAST
-) -> AgentMessage:
-    """Helper function to create a broadcast message"""
-    return AgentMessage(
-        message_id=str(uuid.uuid4()),
-        from_agent=from_agent,
-        to_agent=None,  # Broadcast to all
-        message_type=message_type,
-        content=content
-    )
-
-
-def create_heartbeat_message(agent_id: str, status_info: Dict[str, Any]) -> AgentMessage:
-    """Helper function to create a heartbeat message"""
-    return AgentMessage(
-        message_id=str(uuid.uuid4()),
-        from_agent=agent_id,
-        to_agent="supervisor",  # Always send heartbeats to supervisor
-        message_type=MessageType.HEARTBEAT,
-        content=status_info,
-        priority=MessagePriority.LOW
-    )
