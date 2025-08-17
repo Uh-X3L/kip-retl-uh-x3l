@@ -21,6 +21,22 @@ try:
 except ImportError:
     MESSAGING_AVAILABLE = False
     logging.warning("Simple messaging not available")
+    
+    # Create mock classes for type hints
+    class SimpleMessage:
+        def __init__(self, *args, **kwargs):
+            self.from_agent = None
+            self.content = {}
+            self.created_at = None
+    
+    class MessageType:
+        TASK_ASSIGNMENT = "task_assignment"
+        TASK_RESPONSE = "task_response"
+        STATUS_UPDATE = "status_update"
+        AGENT_REGISTRATION = "agent_registration"
+        TASK_PROGRESS = "task_progress"
+        ERROR_REPORT = "error_report"
+        AGENT_HEARTBEAT = "agent_heartbeat"
 
 # Import existing agents from agents/ folder
 try:
@@ -46,6 +62,12 @@ try:
 except ImportError:
     AZURE_AVAILABLE = False
     logging.debug("Azure AI Projects not available - using simplified coordination mode")
+    
+    class MockAIProjectClient:
+        def __init__(self, *args, **kwargs):
+            pass
+    
+    AIProjectClient = MockAIProjectClient
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

@@ -27,7 +27,6 @@ from queue_manager import MessageQueueManager
 # Import Azure components
 try:
     from azure.identity import DefaultAzureCredential, AzureCliCredential
-    from azure.ai.projects import AIProjectClient
     from agents.agent_manager import AgentManager
     AZURE_AVAILABLE = True
 except ImportError as e:

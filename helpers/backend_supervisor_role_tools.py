@@ -24,8 +24,26 @@ import time
 
 from dotenv import load_dotenv
 from azure.identity import AzureCliCredential
-from azure.ai.projects import AIProjectClient
-from azure.ai.agents.models import FunctionTool
+
+# Azure AI imports with fallback
+try:
+    from azure.ai.projects import AIProjectClient
+    from azure.ai.agents.models import FunctionTool
+    AZURE_AI_AVAILABLE = True
+except ImportError:
+    AZURE_AI_AVAILABLE = False
+    print("⚠️ Azure AI components not available - using mock implementations")
+    
+    class MockAIProjectClient:
+        def __init__(self, *args, **kwargs):
+            pass
+    
+    class MockFunctionTool:
+        def __init__(self, *args, **kwargs):
+            pass
+    
+    AIProjectClient = MockAIProjectClient
+    FunctionTool = MockFunctionTool
 
 # Import GitHub tools
 from .github_app_tools import (
@@ -167,16 +185,29 @@ class BackendSupervisorAgent:
         Now with intelligent agent reuse and simplified coordination!
         """
         self.research_cache = {}
+        self.azure_available = AZURE_AI_AVAILABLE
         
-        # Initialize Azure AI Projects client
-        credential = AzureCliCredential()
-        self.project_client = AIProjectClient(
-            endpoint=PROJECT_ENDPOINT, 
-            credential=credential
-        )
-        
-        # Initialize agent manager for intelligent agent reuse
-        self.agent_manager = AgentManager(self.project_client)
+        # Initialize Azure AI Projects client if available
+        if self.azure_available and PROJECT_ENDPOINT:
+            try:
+                credential = AzureCliCredential()
+                self.project_client = AIProjectClient(
+                    endpoint=PROJECT_ENDPOINT, 
+                    credential=credential
+                )
+                
+                # Initialize agent manager for intelligent agent reuse
+                self.agent_manager = AgentManager(self.project_client)
+                print("✅ Azure AI components initialized")
+            except Exception as e:
+                print(f"⚠️ Azure AI initialization failed: {e}")
+                self.azure_available = False
+                self.project_client = None
+                self.agent_manager = None
+        else:
+            print("ℹ️ Azure AI not available - using simplified mode")
+            self.project_client = None
+            self.agent_manager = None
         
         # Initialize simple coordination if available
         self.coordinator = None
@@ -712,94 +743,134 @@ class BackendSupervisorAgent:
         """
         
         # Create client within the method to ensure proper lifecycle
-        credential = AzureCliCredential()
-        project = AIProjectClient(endpoint=PROJECT_ENDPOINT, credential=credential)
-        
-        with project:
-            # Create research agent with AI Foundry's native web search capabilities
-            research_agent = project.agents.create_agent(
-                model=MODEL_DEPLOYMENT_NAME,
-                name="web-research-analyst",
-                instructions="""You are a senior technical architect and research analyst with access to current web information. 
-                Use your built-in web search capabilities to find the most recent and relevant information about technical topics.
-                Always provide accurate, up-to-date information from reliable sources.
-                Focus on practical implementation advice and current best practices.
-                ALWAYS respond with valid JSON only - no markdown formatting."""
-            )
-            
-            thread = project.agents.threads.create()
-            project.agents.messages.create(thread_id=thread.id, role="user", content=research_prompt)
-            
-            run = project.agents.runs.create(thread_id=thread.id, agent_id=research_agent.id)
-            
-            # Wait for completion
-            timeout = 90
-            start_time = time.time()
-            
-            while run.status in ("queued", "in_progress") and (time.time() - start_time) < timeout:
-                time.sleep(2)
-                run = project.agents.runs.get(thread_id=thread.id, run_id=run.id)
-                print(f"🔄 Research in progress... ({run.status})")
-            
-            if run.status == "failed":
-                raise Exception(f"Research agent run failed: {run.last_error}")
-            
-            if run.status not in ("completed"):
-                raise TimeoutError(f"Research timeout after {timeout}s. Status: {run.status}")
-            
-            # Get the research results
-            messages = project.agents.messages.list(thread_id=thread.id)
-            research_text = ""
-            for msg in messages:
-                if hasattr(msg, 'role') and msg.role == "assistant":
-                    print(f"🔍 Message content type: {type(msg.content)}")
-                    research_text = extract_content_text(msg.content)
-                    break
-            
-            if not research_text:
-                raise ValueError("No research response received from agent")
-            
-            # Ensure research_text is a proper string
-            research_text = str(research_text)
-            print(f"🔍 Raw research response (first 200 chars): {research_text[:200]}")
-            
-            # Parse JSON response - extract from markdown if needed
-            if "```json" in research_text:
-                json_start = research_text.find("```json") + 7
-                json_end = research_text.find("```", json_start)
-                if json_end == -1:
-                    raise ValueError("Malformed JSON markdown - missing closing ```")
-                research_text = research_text[json_start:json_end].strip()
-            elif "```" in research_text:
-                json_start = research_text.find("```") + 3
-                json_end = research_text.find("```", json_start)
-                if json_end == -1:
-                    raise ValueError("Malformed JSON markdown - missing closing ```")
-                research_text = research_text[json_start:json_end].strip()
-            
-            research_text = research_text.strip()
-            
-            try:
-                research_data = json.loads(research_text)
-            except json.JSONDecodeError as e:
-                research_preview = str(research_text)[:500]
-                print(f"❌ JSON parsing failed. Raw text: {research_preview}")
-                raise json.JSONDecodeError(f"Failed to parse research JSON: {e}. Raw response: {research_preview}", research_text, e.pos)
-            
-            # Validate required fields
-            required_fields = ["summary", "best_practices", "technologies", "implementation_approach", "estimated_complexity"]
-            for field in required_fields:
-                if field not in research_data:
-                    raise ValueError(f"Missing required field '{field}' in research response")
-            
+        if not AZURE_AI_AVAILABLE or not PROJECT_ENDPOINT:
+            print("ℹ️ Azure AI not available, using simplified research...")
             return ResearchResult(
                 topic=topic,
-                summary=research_data["summary"],
-                best_practices=research_data["best_practices"],
-                technologies=research_data["technologies"],
-                implementation_approach=research_data["implementation_approach"],
-                estimated_complexity=research_data["estimated_complexity"],
-                sources=research_data.get("recommended_sources", [])
+                summary=f"Research topic: {topic}. Azure AI web research not available.",
+                best_practices=["Use existing tools", "Start simple", "Iterate based on needs"],
+                technologies=["Standard web technologies", "Open source solutions"],
+                implementation_approach="Pragmatic approach using available resources",
+                estimated_complexity="Medium",
+                sources=["Standard documentation"],
+                key_findings=["Focus on minimal viable implementation"],
+                technical_requirements=["Basic web development stack"],
+                resources=["Online documentation"],
+                challenges=["Limited automated research capabilities"],
+                market_analysis=f"Manual research needed for: {topic}",
+                competitive_landscape="Manual analysis required",
+                recommendations=["Start with basic implementation", "Use proven technologies"]
+            )
+        
+        try:
+            credential = AzureCliCredential()
+            project = AIProjectClient(endpoint=PROJECT_ENDPOINT, credential=credential)
+        
+            with project:
+                # Create research agent with AI Foundry's native web search capabilities
+                research_agent = project.agents.create_agent(
+                    model=MODEL_DEPLOYMENT_NAME,
+                    name="web-research-analyst",
+                    instructions="""You are a senior technical architect and research analyst with access to current web information. 
+                    Use your built-in web search capabilities to find the most recent and relevant information about technical topics.
+                    Always provide accurate, up-to-date information from reliable sources.
+                    Focus on practical implementation advice and current best practices.
+                    ALWAYS respond with valid JSON only - no markdown formatting."""
+                )
+                
+                thread = project.agents.threads.create()
+                project.agents.messages.create(thread_id=thread.id, role="user", content=research_prompt)
+                
+                run = project.agents.runs.create(thread_id=thread.id, agent_id=research_agent.id)
+                
+                # Wait for completion
+                timeout = 90
+                start_time = time.time()
+                
+                while run.status in ("queued", "in_progress") and (time.time() - start_time) < timeout:
+                    time.sleep(2)
+                    run = project.agents.runs.get(thread_id=thread.id, run_id=run.id)
+                    print(f"🔄 Research in progress... ({run.status})")
+                
+                if run.status == "failed":
+                    raise Exception(f"Research agent run failed: {run.last_error}")
+                
+                if run.status not in ("completed"):
+                    raise TimeoutError(f"Research timeout after {timeout}s. Status: {run.status}")
+                
+                # Get the research results
+                messages = project.agents.messages.list(thread_id=thread.id)
+                research_text = ""
+                for msg in messages:
+                    if hasattr(msg, 'role') and msg.role == "assistant":
+                        print(f"🔍 Message content type: {type(msg.content)}")
+                        research_text = extract_content_text(msg.content)
+                        break
+                
+                if not research_text:
+                    raise ValueError("No research response received from agent")
+                
+                # Ensure research_text is a proper string
+                research_text = str(research_text)
+                print(f"🔍 Raw research response (first 200 chars): {research_text[:200]}")
+                
+                # Parse JSON response - extract from markdown if needed
+                if "```json" in research_text:
+                    json_start = research_text.find("```json") + 7
+                    json_end = research_text.find("```", json_start)
+                    if json_end == -1:
+                        raise ValueError("Malformed JSON markdown - missing closing ```")
+                    research_text = research_text[json_start:json_end].strip()
+                elif "```" in research_text:
+                    json_start = research_text.find("```") + 3
+                    json_end = research_text.find("```", json_start)
+                    if json_end == -1:
+                        raise ValueError("Malformed JSON markdown - missing closing ```")
+                    research_text = research_text[json_start:json_end].strip()
+                
+                research_text = research_text.strip()
+                
+                try:
+                    research_data = json.loads(research_text)
+                except json.JSONDecodeError as e:
+                    research_preview = str(research_text)[:500]
+                    print(f"❌ JSON parsing failed. Raw text: {research_preview}")
+                    raise json.JSONDecodeError(f"Failed to parse research JSON: {e}. Raw response: {research_preview}", research_text, e.pos)
+                
+                # Validate required fields
+                required_fields = ["summary", "best_practices", "technologies", "implementation_approach", "estimated_complexity"]
+                for field in required_fields:
+                    if field not in research_data:
+                        raise ValueError(f"Missing required field '{field}' in research response")
+                
+                return ResearchResult(
+                    topic=topic,
+                    summary=research_data["summary"],
+                    best_practices=research_data["best_practices"],
+                    technologies=research_data["technologies"],
+                    implementation_approach=research_data["implementation_approach"],
+                    estimated_complexity=research_data["estimated_complexity"],
+                    sources=research_data.get("recommended_sources", [])
+                )
+        
+        except Exception as e:
+            print(f"⚠️ Azure AI research failed: {e}")
+            print("🔄 Using simplified research fallback...")
+            return ResearchResult(
+                topic=topic,
+                summary=f"Simplified research for: {topic}. Full AI research unavailable.",
+                best_practices=["Start simple", "Use proven technologies", "Iterate based on feedback"],
+                technologies=["Standard web technologies", "Open source solutions"],
+                implementation_approach="Pragmatic approach using available resources",
+                estimated_complexity="Medium",
+                sources=["Standard documentation"],
+                key_findings=["Focus on core requirements"],
+                technical_requirements=["Basic development stack"],
+                resources=["Online documentation"],
+                challenges=["Limited automated research"],
+                market_analysis=f"Research topic: {topic}",
+                competitive_landscape="Manual analysis required",
+                recommendations=["Start with MVP", "Use well-documented technologies"]
             )
     
     def create_detailed_issue(self, project_idea: str, requirements: str = "") -> Dict[str, Any]:

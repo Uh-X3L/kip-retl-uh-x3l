@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 class MessageType(Enum):
     """Essential message types for agent coordination."""
+    TASK_ASSIGNMENT = "task_assignment"
     TASK_REQUEST = "task_request"
     TASK_RESPONSE = "task_response"
     STATUS_UPDATE = "status_update"

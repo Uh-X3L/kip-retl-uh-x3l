@@ -5,7 +5,6 @@ Provides reuse capabilities, lifecycle management, and common functionality.
 
 import logging
 from typing import Dict, Any, Optional, List
-from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
 import os
 import json
@@ -14,18 +13,57 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
+# Azure AI Projects import with fallback
+try:
+    from azure.ai.projects import AIProjectClient
+    AZURE_AI_PROJECTS_AVAILABLE = True
+except ImportError:
+    # Fallback for when Azure AI Projects is not installed
+    AZURE_AI_PROJECTS_AVAILABLE = False
+    logger.warning("Azure AI Projects not available - using mock client")
+    
+    class MockAIProjectClient:
+        def __init__(self, *args, **kwargs):
+            pass
+        
+        def agents(self):
+            return MockAgentManager()
+    
+    class MockAgentManager:
+        def create_agent(self, *args, **kwargs):
+            return MockAgent()
+        
+        def get_agent(self, agent_id):
+            return MockAgent()
+        
+        def create_thread(self):
+            return MockThread()
+        
+        def get_thread(self, thread_id):
+            return MockThread()
+    
+    class MockAgent:
+        def __init__(self):
+            self.id = "mock_agent_id"
+    
+    class MockThread:
+        def __init__(self):
+            self.id = "mock_thread_id"
+    
+    AIProjectClient = MockAIProjectClient
+
 class BaseAgent:
     """
     Base class for all Azure AI Foundry agents with built-in reuse capabilities.
     """
     
-    def __init__(self, project_client: AIProjectClient, agent_name: str, instructions: str, 
+    def __init__(self, project_client, agent_name: str, instructions: str, 
                  model: str = "gpt-4o", tools: List = None, agent_type: str = "assistant"):
         """
         Initialize base agent with reuse capabilities.
         
         Args:
-            project_client: Azure AI Projects client
+            project_client: Azure AI Projects client (or mock client)
             agent_name: Unique identifier for the agent
             instructions: System instructions for the agent
             model: AI model to use
@@ -38,6 +76,7 @@ class BaseAgent:
         self.model = model
         self.tools = tools or []
         self.agent_type = agent_type
+        self.azure_available = AZURE_AI_PROJECTS_AVAILABLE
         
         # Agent instance variables
         self.agent = None
