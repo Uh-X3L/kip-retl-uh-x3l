@@ -212,39 +212,5 @@ if __name__ == "__main__":
     
     print("✅ Created traced_imports.py helper module")
 
-def main():
-    """Main function to trace your entire codebase."""
-    print("🎯 SNOOP CODEBASE TRACER")
-    print("=" * 50)
-    
-    # Trace the helpers directory
-    helpers_dir = Path("helpers")
-    if helpers_dir.exists():
-        print(f"\n📁 Tracing helpers directory...")
-        traced_helpers = trace_all_modules_in_directory("helpers")
-    
-    # Trace root Python files
-    print(f"\n📁 Tracing root directory files...")
-    for py_file in Path(".").glob("*.py"):
-        if "_traced" not in py_file.stem and py_file.stem != "trace_your_codebase":
-            try:
-                add_tracing_to_module(str(py_file))
-            except Exception as e:
-                print(f"⚠️ Failed to trace {py_file}: {e}")
-    
-    # Create import helper
-    create_traced_import_helper()
-    
-    print(f"\n🎯 COMPLETE CODEBASE TRACING FINISHED!")
-    print("=" * 50)
-    print("📋 HOW TO USE:")
-    print("1. Import traced_imports.py in your scripts")
-    print("2. Run your traced modules to see line-by-line execution")
-    print("3. Every function call, variable change, and execution step will be shown")
-    print("\n💡 Example usage:")
-    print("   import traced_imports")
-    print("   from helpers.github_app_tools_traced import *")
-    print("   # Now all functions are traced!")
-
 if __name__ == "__main__":
     main()

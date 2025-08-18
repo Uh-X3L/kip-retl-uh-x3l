@@ -52,13 +52,13 @@
   },
   "classes": {},
   "excluded_modules": [
-    "*_test",
+    "__pycache__",
     "test_*",
-    "__pycache__"
+    "*_test"
   ],
   "excluded_methods": [
+    "__str__",
     "__init__",
-    "__repr__",
-    "__str__"
+    "__repr__"
   ]
 }

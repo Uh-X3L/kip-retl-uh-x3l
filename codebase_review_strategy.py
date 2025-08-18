@@ -354,67 +354,6 @@ def validate_fixes():
     
     return validation_results
 
-def main():
-    """Main execution function for the codebase review strategy."""
-    print("🚀 STARTING AUTOMATED CODEBASE REVIEW AND FIX PROCESS")
-    print("🤖 Using Redis communication and specialized agents")
-    print()
-    
-    try:
-        # Step 1: Analyze current issues
-        issues = analyze_codebase_issues()
-        
-        # Step 2: Create comprehensive fix plan
-        plan_result = create_comprehensive_fix_plan()
-        
-        # Step 3: Set up Redis communication
-        messaging = setup_redis_communication()
-        
-        # Step 4: Deploy specialized agents
-        agents = deploy_specialized_agents(messaging)
-        
-        # Step 5: Coordinate fix execution
-        execution_results = coordinate_fix_execution(agents, plan_result)
-        
-        # Step 6: Validate fixes
-        validation_results = validate_fixes()
-        
-        # Summary
-        print("\n🎉 CODEBASE REVIEW AND FIX STRATEGY COMPLETED")
-        print("=" * 55)
-        print(f"📊 Total Issues Identified: {sum(len(v) if isinstance(v, list) else 1 for v in issues.values())}")
-        print(f"🎯 GitHub Issue Created: {plan_result['issue_url']}")
-        print(f"📋 Subtasks Generated: {plan_result['subtasks_count']}")
-        print(f"🤖 Agents Deployed: {len(agents)}")
-        print(f"⚡ Tasks Executed: {execution_results['total_fixes']}")
-        print(f"✅ Validation Status: {validation_results['overall_status'].upper()}")
-        
-        print(f"\n🚀 NEXT STEPS:")
-        print(f"   1. Review the GitHub issue: {plan_result['issue_url']}")
-        print(f"   2. Monitor agent progress through Redis messaging")
-        print(f"   3. Execute individual subtasks as needed")
-        print(f"   4. Validate and test all implemented fixes")
-        print(f"   5. Deploy to Azure when ready")
-        
-        print(f"\n🎊 STRATEGY EXECUTION SUCCESSFUL!")
-        print(f"   The codebase review and fix plan is now active.")
-        print(f"   Specialized agents are coordinating through Redis messaging.")
-        print(f"   All {plan_result['subtasks_count']} subtasks are tracked in GitHub.")
-        
-        return {
-            "success": True,
-            "issues_identified": issues,
-            "plan_created": plan_result,
-            "agents_deployed": len(agents),
-            "validation_status": validation_results["overall_status"]
-        }
-        
-    except Exception as e:
-        print(f"\n❌ ERROR IN STRATEGY EXECUTION: {e}")
-        import traceback
-        traceback.print_exc()
-        return {"success": False, "error": str(e)}
-
 if __name__ == "__main__":
     result = main()
     

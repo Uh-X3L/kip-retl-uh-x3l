@@ -48,36 +48,6 @@ logger = logging.getLogger(__name__)
 class MockSupervisorAgent:
     """Mock supervisor that simulates the backend supervisor role tools functionality"""
     
-    def __init__(self):
-        self.project_templates = {
-            "rest_api": {
-                "complexity": "Medium",
-                "estimated_hours": 80,
-                "agent_types": ["worker", "testing", "documentation", "devops"],
-                "subtasks": [
-                    {"title": "API Architecture Design", "agent_type": "worker", "hours": 12},
-                    {"title": "Database Schema Design", "agent_type": "worker", "hours": 8},
-                    {"title": "Authentication Implementation", "agent_type": "worker", "hours": 16},
-                    {"title": "Core API Endpoints", "agent_type": "worker", "hours": 20},
-                    {"title": "Testing Framework Setup", "agent_type": "testing", "hours": 10},
-                    {"title": "API Documentation", "agent_type": "documentation", "hours": 8},
-                    {"title": "CI/CD Pipeline", "agent_type": "devops", "hours": 6}
-                ]
-            },
-            "web_scraper": {
-                "complexity": "Low",
-                "estimated_hours": 40,
-                "agent_types": ["worker", "testing", "documentation"],
-                "subtasks": [
-                    {"title": "Scraper Architecture", "agent_type": "worker", "hours": 10},
-                    {"title": "Data Processing Pipeline", "agent_type": "worker", "hours": 15},
-                    {"title": "Visualization Components", "agent_type": "worker", "hours": 8},
-                    {"title": "Test Suite Creation", "agent_type": "testing", "hours": 5},
-                    {"title": "User Documentation", "agent_type": "documentation", "hours": 2}
-                ]
-            }
-        }
-    
     @trace_func
     def create_detailed_issue(self, project_idea: str, requirements: str = "") -> Dict[str, Any]:
         """Mock project planning that simulates BackendSupervisorAgent behavior"""

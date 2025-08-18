@@ -273,33 +273,6 @@ def conditional_trace(module_name: str = None, auto_module: bool = True):
         module_name: Name of the module (auto-detected if None)
         auto_module: Whether to auto-detect module name from function
     """
-    def decorator(func: Callable) -> Callable:
-        # Auto-detect module name if not provided
-        detected_module = module_name
-        if auto_module and not detected_module:
-            detected_module = func.__module__.split('.')[-1] if hasattr(func, '__module__') else 'unknown'
-        
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            if TRACING_CONTROLLER.should_trace(detected_module, func.__name__):
-                if SNOOP_AVAILABLE:
-                    traced_func = TRACING_CONTROLLER.get_traced_function(func, detected_module)
-                    return traced_func(*args, **kwargs)
-                else:
-                    # Fallback logging when snoop not available
-                    logger.info(f"🔍 Tracing: {detected_module}.{func.__name__} called")
-                    result = func(*args, **kwargs)
-                    logger.info(f"🔍 Tracing: {detected_module}.{func.__name__} completed")
-                    return result
-            else:
-                return func(*args, **kwargs)
-        
-        # Store metadata for introspection
-        wrapper._traced = True
-        wrapper._module_name = detected_module
-        wrapper._original_func = func
-        
-        return wrapper
     return decorator
 
 

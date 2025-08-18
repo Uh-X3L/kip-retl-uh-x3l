@@ -71,52 +71,28 @@ def create_fallback_project_client(endpoint: str, credential: Any) -> Any:
     
     class FallbackAgentsManager:
         def __init__(self):
-            self.agents_cache = {}
-        
+            self._agents = {}
+            
         def create_agent(self, *args, **kwargs):
-            """Create a mock agent."""
-            agent_id = f"fallback_agent_{len(self.agents_cache)}"
+            agent_id = f"fallback_agent_{len(self._agents)}"
             agent = FallbackAgent(agent_id, *args, **kwargs)
-            self.agents_cache[agent_id] = agent
-            logger.info(f"🤖 Created fallback agent: {agent_id}")
+            self._agents[agent_id] = agent
             return agent
-        
-        def get_agent(self, agent_id: str):
-            """Get a cached agent."""
-            return self.agents_cache.get(agent_id)
-        
+            
+        def get_agent(self, agent_id):
+            return self._agents.get(agent_id, FallbackAgent(agent_id))
+            
         def create_thread(self):
-            """Create a mock thread."""
-            thread_id = f"fallback_thread_{int(time.time())}"
-            return FallbackThread(thread_id)
-        
-        def get_thread(self, thread_id: str):
-            """Get a mock thread."""
-            return FallbackThread(thread_id)
-        
-        def create_message(self, thread_id: str, role: str, content: str):
-            """Create a mock message."""
-            return FallbackMessage(thread_id, role, content)
-        
-        def list_messages(self, thread_id: str):
-            """List mock messages."""
-            return FallbackMessageList([
-                FallbackMessage(thread_id, "assistant", "This is a fallback response from the Azure AI Foundry compatibility layer.")
-            ])
-        
-        def create_run(self, thread_id: str, assistant_id: str):
-            """Create a mock run."""
-            return FallbackRun(thread_id, assistant_id)
-        
-        def get_run(self, thread_id: str, run_id: str):
-            """Get a mock run."""
-            return FallbackRun(thread_id, run_id, status="completed")
+            return FallbackThread(f"fallback_thread_{int(time.time())}")
     
     class FallbackAgent:
         def __init__(self, agent_id: str, *args, **kwargs):
             self.id = agent_id
             self.name = kwargs.get('name', f'Fallback Agent {agent_id}')
             self.instructions = kwargs.get('instructions', 'This is a fallback agent.')
+            
+        def send_message(self, thread_id, message):
+            return f"Fallback response to: {message[:50]}..."
             
     class FallbackThread:
         def __init__(self, thread_id: str):

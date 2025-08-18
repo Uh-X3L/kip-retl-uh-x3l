@@ -45,13 +45,6 @@ try:
 except ImportError:
     VIZTRACER_AVAILABLE = False
     class VizTracer:
-        def __init__(self, *args, **kwargs):
-            pass
-        def __enter__(self):
-            return self
-        def __exit__(self, *args):
-            pass
-
 try:
     from icecream import ic
     ICECREAM_AVAILABLE = True
@@ -179,98 +172,6 @@ class ExecutionVisualizer:
             include_args: Whether to log method arguments
             include_return: Whether to log return values
         """
-        def decorator(func: Callable) -> Callable:
-            # Apply snoop decorator if available
-            if SNOOP_AVAILABLE:
-                func = self.snoop_config(func)
-            
-            @functools.wraps(func)
-            def wrapper(*args, **kwargs):
-                method_name = f"{func.__module__}.{func.__qualname__}"
-                
-                # Log method entry
-                if LOGURU_AVAILABLE:
-                    entry_data = {
-                        "event": "method_entry",
-                        "method": method_name,
-                        "args_count": len(args),
-                        "kwargs_count": len(kwargs)
-                    }
-                    
-                    if include_args:
-                        # Sanitize arguments for logging
-                        safe_args = []
-                        for i, arg in enumerate(args):
-                            if i == 0 and hasattr(arg, '__class__'):  # self parameter
-                                safe_args.append(f"<{arg.__class__.__name__}>")
-                            elif isinstance(arg, (str, int, float, bool)):
-                                safe_args.append(arg)
-                            else:
-                                safe_args.append(f"<{type(arg).__name__}>")
-                        
-                        safe_kwargs = {}
-                        for k, v in kwargs.items():
-                            if isinstance(v, (str, int, float, bool)):
-                                safe_kwargs[k] = v
-                            else:
-                                safe_kwargs[k] = f"<{type(v).__name__}>"
-                        
-                        entry_data["args"] = safe_args
-                        entry_data["kwargs"] = safe_kwargs
-                    
-                    logger.debug("🔧 Method called", **entry_data)
-                
-                # Debug with icecream
-                if ICECREAM_AVAILABLE and include_args:
-                    ic(f"Calling {method_name}", args[:3], kwargs)
-                
-                start_time = time.time()
-                
-                try:
-                    result = func(*args, **kwargs)
-                    execution_time = time.time() - start_time
-                    
-                    # Log successful completion
-                    if LOGURU_AVAILABLE:
-                        completion_data = {
-                            "event": "method_success",
-                            "method": method_name,
-                            "execution_time": execution_time
-                        }
-                        
-                        if include_return:
-                            if isinstance(result, (str, int, float, bool, list, dict)):
-                                if isinstance(result, str) and len(result) > 200:
-                                    completion_data["return_value"] = result[:200] + "..."
-                                else:
-                                    completion_data["return_value"] = result
-                            else:
-                                completion_data["return_type"] = type(result).__name__
-                        
-                        logger.debug("✅ Method completed", **completion_data)
-                    
-                    if ICECREAM_AVAILABLE:
-                        ic(f"Completed {method_name}", f"{execution_time:.3f}s")
-                    
-                    return result
-                
-                except Exception as e:
-                    execution_time = time.time() - start_time
-                    
-                    # Log error
-                    if LOGURU_AVAILABLE:
-                        logger.error("❌ Method failed", 
-                                   method=method_name,
-                                   execution_time=execution_time,
-                                   error=str(e),
-                                   error_type=type(e).__name__)
-                    
-                    if ICECREAM_AVAILABLE:
-                        ic(f"Failed {method_name}", str(e))
-                    
-                    raise
-            
-            return wrapper
         return decorator
     
     def log_step(self, step_name: str, details: Dict[str, Any] = None):
@@ -371,10 +272,6 @@ def trace_execution(include_args: bool = True, include_return: bool = True):
         include_args: Whether to log method arguments
         include_return: Whether to log return values
     """
-    def decorator(func: Callable) -> Callable:
-        if _global_visualizer:
-            return _global_visualizer.trace_method(include_args, include_return)(func)
-        return func
     return decorator
 
 def log_step(step_name: str, **details):

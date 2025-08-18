@@ -538,9 +538,6 @@ def run_azure_coordination_demo():
         # Note: In a real implementation, you would initialize the Azure project client here
         # For demo purposes, we'll simulate it
         class MockProjectClient:
-            def __init__(self):
-                pass
-        
         project_client = MockProjectClient()
         
         # Run the demonstration

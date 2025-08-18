@@ -56,12 +56,6 @@ class RedisCommunicationDemo:
     Comprehensive demonstration of Redis-based agent communication.
     """
     
-    def __init__(self):
-        self.messaging = SimpleMessaging()
-        self.coordinator = SimpleAgentCoordinator("demo-supervisor")
-        self.agents = []
-        self.demo_results = {}
-    
     @trace_func
     def setup_demo(self):
         """Set up the demo environment."""
@@ -392,11 +386,5 @@ class RedisCommunicationDemo:
 
 
 @trace_func
-def main():
-    """Main function to run the Redis communication demo."""
-    demo = RedisCommunicationDemo()
-    return demo.run_complete_demo()
-
-
 if __name__ == "__main__":
     main()
