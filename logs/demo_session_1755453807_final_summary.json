@@ -1,0 +1,738 @@
+{
+  "session_name": "demo_session_1755453807",
+  "snoop_enabled": false,
+  "traced_functions_count": 0,
+  "traced_functions": [],
+  "snoop_output_file": "logs\\demo_session_1755453807_snoop_trace.log",
+  "log_directory": "logs",
+  "comprehensive_logging": true,
+  "execution_summary": {
+    "session_name": "demo_session_1755453807",
+    "session_duration": 1.395932,
+    "agents_involved": [
+      "ComputationAgent",
+      "DataProcessingAgent"
+    ],
+    "agent_statistics": {
+      "ComputationAgent": {
+        "total_operations": 3,
+        "completed_operations": 3,
+        "total_duration": 1.4967070000000002,
+        "operation_types": [
+          "task_execution",
+          "agent_initialization"
+        ]
+      },
+      "DataProcessingAgent": {
+        "total_operations": 3,
+        "completed_operations": 3,
+        "total_duration": 1.539385,
+        "operation_types": [
+          "task_execution",
+          "agent_initialization"
+        ]
+      }
+    },
+    "execution_flow": [
+      {
+        "type": "operation",
+        "timestamp": "2025-08-17T18:03:27.083547+00:00",
+        "agent": "ComputationAgent",
+        "operation": "agent_initialization",
+        "status": "COMPLETED",
+        "duration": 1.280148
+      },
+      {
+        "type": "operation",
+        "timestamp": "2025-08-17T18:03:27.113550+00:00",
+        "agent": "DataProcessingAgent",
+        "operation": "agent_initialization",
+        "status": "COMPLETED",
+        "duration": 1.316036
+      },
+      {
+        "type": "operation",
+        "timestamp": "2025-08-17T18:03:27.473668+00:00",
+        "agent": "ComputationAgent",
+        "operation": "task_execution",
+        "status": "COMPLETED",
+        "duration": 0.083781
+      },
+      {
+        "type": "operation",
+        "timestamp": "2025-08-17T18:03:27.647456+00:00",
+        "agent": "ComputationAgent",
+        "operation": "task_execution",
+        "status": "COMPLETED",
+        "duration": 0.132778
+      },
+      {
+        "type": "operation",
+        "timestamp": "2025-08-17T18:03:27.851603+00:00",
+        "agent": "DataProcessingAgent",
+        "operation": "task_execution",
+        "status": "COMPLETED",
+        "duration": 0.109423
+      },
+      {
+        "type": "operation",
+        "timestamp": "2025-08-17T18:03:28.050915+00:00",
+        "agent": "DataProcessingAgent",
+        "operation": "task_execution",
+        "status": "COMPLETED",
+        "duration": 0.113926
+      }
+    ]
+  },
+  "comprehensive_summary": {
+    "session_id": "3856e476-833f-417b-9db3-8b29ccb06776",
+    "session_name": "demo_session_1755453807",
+    "start_time": "2025-08-17T18:03:27.075375+00:00",
+    "end_time": "2025-08-17T18:03:28.471307+00:00",
+    "total_duration": 1.395932,
+    "status": "ExecutionStatus.COMPLETED",
+    "agent_operations": [
+      {
+        "operation_id": "f19ca0ed-a765-4e42-bf1b-a78fbb802fa6",
+        "agent_name": "ComputationAgent",
+        "agent_type": "computation_agent",
+        "operation_type": "agent_initialization",
+        "timestamp": "2025-08-17T18:03:27.083547+00:00",
+        "duration": 1.280148,
+        "status": "ExecutionStatus.COMPLETED",
+        "inputs": {
+          "tracing_enabled": true,
+          "redis_available": true,
+          "log_dir": "logs"
+        },
+        "outputs": {
+          "agent_name": "ComputationAgent",
+          "agent_type": "computation_agent",
+          "current_state": "initialized",
+          "queue_length": 0,
+          "cached_results": 2,
+          "tasks_completed": 2,
+          "total_execution_time": 0.15593481063842773,
+          "average_task_time": 0.07796740531921387,
+          "redis_messages_sent": 0,
+          "redis_messages_received": 0,
+          "tracing_metrics": {
+            "session_name": "demo_session_1755453807",
+            "snoop_enabled": false,
+            "traced_functions_count": 0,
+            "traced_functions": [],
+            "snoop_output_file": "logs\\demo_session_1755453807_snoop_trace.log",
+            "log_directory": "logs",
+            "comprehensive_logging": true,
+            "execution_summary": {}
+          }
+        },
+        "method_calls": [],
+        "messages_sent": [],
+        "messages_received": [],
+        "error": null,
+        "metadata": {}
+      },
+      {
+        "operation_id": "59d17ec6-75cd-4822-9799-32bdbf40aa17",
+        "agent_name": "DataProcessingAgent",
+        "agent_type": "data_processing_agent",
+        "operation_type": "agent_initialization",
+        "timestamp": "2025-08-17T18:03:27.113550+00:00",
+        "duration": 1.316036,
+        "status": "ExecutionStatus.COMPLETED",
+        "inputs": {
+          "tracing_enabled": true,
+          "redis_available": true,
+          "log_dir": "logs"
+        },
+        "outputs": {
+          "agent_name": "DataProcessingAgent",
+          "agent_type": "data_processing_agent",
+          "current_state": "initialized",
+          "queue_length": 0,
+          "cached_results": 2,
+          "tasks_completed": 2,
+          "total_execution_time": 0.17553305625915527,
+          "average_task_time": 0.08776652812957764,
+          "redis_messages_sent": 0,
+          "redis_messages_received": 0,
+          "tracing_metrics": {
+            "session_name": "demo_session_1755453807",
+            "snoop_enabled": false,
+            "traced_functions_count": 0,
+            "traced_functions": [],
+            "snoop_output_file": "logs\\demo_session_1755453807_snoop_trace.log",
+            "log_directory": "logs",
+            "comprehensive_logging": true,
+            "execution_summary": {}
+          }
+        },
+        "method_calls": [],
+        "messages_sent": [],
+        "messages_received": [],
+        "error": null,
+        "metadata": {
+          "steps": [
+            {
+              "step_id": "e948835c-e6c6-4894-a168-235ee872e6e0",
+              "timestamp": "2025-08-17T18:03:27.365149+00:00",
+              "step_name": "Task Added: task_0_1755453807",
+              "details": {
+                "task_details": {
+                  "task_id": "task_0_1755453807",
+                  "timestamp": "2025-08-17T19:03:27.360187",
+                  "agent_name": "ComputationAgent",
+                  "status": "completed",
+                  "type": "simple_computation",
+                  "data": {
+                    "operation": "add",
+                    "values": [
+                      10,
+                      20,
+                      30,
+                      40,
+                      50
+                    ]
+                  },
+                  "execution_start": "2025-08-17T19:03:27.491988",
+                  "execution_end": "2025-08-17T19:03:27.516184",
+                  "result": {
+                    "computation_result": 150,
+                    "operation": "add",
+                    "input_values": [
+                      10,
+                      20,
+                      30,
+                      40,
+                      50
+                    ]
+                  }
+                },
+                "queue_length": 1
+              },
+              "level": "INFO",
+              "session_id": "3856e476-833f-417b-9db3-8b29ccb06776"
+            },
+            {
+              "step_id": "0f07a05f-dd78-4ff3-b25e-18b3085476ef",
+              "timestamp": "2025-08-17T18:03:27.391857+00:00",
+              "step_name": "Task Added: task_1_1755453807",
+              "details": {
+                "task_details": {
+                  "task_id": "task_1_1755453807",
+                  "timestamp": "2025-08-17T19:03:27.387852",
+                  "agent_name": "ComputationAgent",
+                  "status": "completed",
+                  "type": "simple_computation",
+                  "data": {
+                    "operation": "multiply",
+                    "values": [
+                      2,
+                      3,
+                      4
+                    ]
+                  },
+                  "execution_start": "2025-08-17T19:03:27.689456",
+                  "execution_end": "2025-08-17T19:03:27.734823",
+                  "result": {
+                    "computation_result": 24,
+                    "operation": "multiply",
+                    "input_values": [
+                      2,
+                      3,
+                      4
+                    ]
+                  }
+                },
+                "queue_length": 2
+              },
+              "level": "INFO",
+              "session_id": "3856e476-833f-417b-9db3-8b29ccb06776"
+            },
+            {
+              "step_id": "0d8df4fd-a4eb-4763-a9de-c23bad12ed68",
+              "timestamp": "2025-08-17T18:03:27.421243+00:00",
+              "step_name": "Task Added: task_0_1755453807",
+              "details": {
+                "task_details": {
+                  "task_id": "task_0_1755453807",
+                  "timestamp": "2025-08-17T19:03:27.416217",
+                  "agent_name": "DataProcessingAgent",
+                  "status": "completed",
+                  "type": "data_processing",
+                  "data": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    -1,
+                    -2,
+                    10,
+                    15
+                  ],
+                  "processing_type": "statistics",
+                  "execution_start": "2025-08-17T19:03:27.876357",
+                  "execution_end": "2025-08-17T19:03:27.925029",
+                  "result": {
+                    "processing_result": {
+                      "count": 9,
+                      "sum": 37,
+                      "avg": 4.111111111111111
+                    },
+                    "processing_type": "statistics",
+                    "input_data_length": 9
+                  }
+                },
+                "queue_length": 1
+              },
+              "level": "INFO",
+              "session_id": "3856e476-833f-417b-9db3-8b29ccb06776"
+            },
+            {
+              "step_id": "06f923c9-a651-4c4f-9d79-8efcaee996b2",
+              "timestamp": "2025-08-17T18:03:27.448075+00:00",
+              "step_name": "Task Added: task_1_1755453807",
+              "details": {
+                "task_details": {
+                  "task_id": "task_1_1755453807",
+                  "timestamp": "2025-08-17T19:03:27.443794",
+                  "agent_name": "DataProcessingAgent",
+                  "status": "completed",
+                  "type": "data_processing",
+                  "data": [
+                    -5,
+                    -10,
+                    1,
+                    2,
+                    3,
+                    100,
+                    200
+                  ],
+                  "processing_type": "filter_positive",
+                  "execution_start": "2025-08-17T19:03:28.084252",
+                  "execution_end": "2025-08-17T19:03:28.127587",
+                  "result": {
+                    "processing_result": [
+                      1,
+                      2,
+                      3,
+                      100,
+                      200
+                    ],
+                    "processing_type": "filter_positive",
+                    "input_data_length": 7
+                  }
+                },
+                "queue_length": 2
+              },
+              "level": "INFO",
+              "session_id": "3856e476-833f-417b-9db3-8b29ccb06776"
+            }
+          ]
+        }
+      },
+      {
+        "operation_id": "396fdb96-5b77-4b3b-b19f-ea014cfa9c20",
+        "agent_name": "ComputationAgent",
+        "agent_type": "computation_agent",
+        "operation_type": "task_execution",
+        "timestamp": "2025-08-17T18:03:27.473668+00:00",
+        "duration": 0.083781,
+        "status": "ExecutionStatus.COMPLETED",
+        "inputs": {
+          "task_id": "task_0_1755453807",
+          "timestamp": "2025-08-17T19:03:27.360187",
+          "agent_name": "ComputationAgent",
+          "status": "completed",
+          "type": "simple_computation",
+          "data": {
+            "operation": "add",
+            "values": [
+              10,
+              20,
+              30,
+              40,
+              50
+            ]
+          },
+          "execution_start": "2025-08-17T19:03:27.491988",
+          "execution_end": "2025-08-17T19:03:27.516184",
+          "result": {
+            "computation_result": 150,
+            "operation": "add",
+            "input_values": [
+              10,
+              20,
+              30,
+              40,
+              50
+            ]
+          }
+        },
+        "outputs": {
+          "computation_result": 150,
+          "operation": "add",
+          "input_values": [
+            10,
+            20,
+            30,
+            40,
+            50
+          ]
+        },
+        "method_calls": [],
+        "messages_sent": [],
+        "messages_received": [],
+        "error": null,
+        "metadata": {
+          "steps": [
+            {
+              "step_id": "d78290f8-e2da-4da3-bd0d-94d519b3de68",
+              "timestamp": "2025-08-17T18:03:27.534184+00:00",
+              "step_name": "Task Completed: task_0_1755453807",
+              "details": {
+                "execution_time": 0.05150461196899414,
+                "result": {
+                  "computation_result": 150,
+                  "operation": "add",
+                  "input_values": [
+                    10,
+                    20,
+                    30,
+                    40,
+                    50
+                  ]
+                }
+              },
+              "level": "INFO",
+              "session_id": "3856e476-833f-417b-9db3-8b29ccb06776"
+            }
+          ]
+        }
+      },
+      {
+        "operation_id": "bfa0cf8c-8012-4d52-9dba-90ddc3f6da48",
+        "agent_name": "ComputationAgent",
+        "agent_type": "computation_agent",
+        "operation_type": "task_execution",
+        "timestamp": "2025-08-17T18:03:27.647456+00:00",
+        "duration": 0.132778,
+        "status": "ExecutionStatus.COMPLETED",
+        "inputs": {
+          "task_id": "task_1_1755453807",
+          "timestamp": "2025-08-17T19:03:27.387852",
+          "agent_name": "ComputationAgent",
+          "status": "completed",
+          "type": "simple_computation",
+          "data": {
+            "operation": "multiply",
+            "values": [
+              2,
+              3,
+              4
+            ]
+          },
+          "execution_start": "2025-08-17T19:03:27.689456",
+          "execution_end": "2025-08-17T19:03:27.734823",
+          "result": {
+            "computation_result": 24,
+            "operation": "multiply",
+            "input_values": [
+              2,
+              3,
+              4
+            ]
+          }
+        },
+        "outputs": {
+          "computation_result": 24,
+          "operation": "multiply",
+          "input_values": [
+            2,
+            3,
+            4
+          ]
+        },
+        "method_calls": [],
+        "messages_sent": [],
+        "messages_received": [],
+        "error": null,
+        "metadata": {
+          "steps": [
+            {
+              "step_id": "498c0a87-f2c7-4e1f-83c9-65ed3a085a40",
+              "timestamp": "2025-08-17T18:03:27.759155+00:00",
+              "step_name": "Task Completed: task_1_1755453807",
+              "details": {
+                "execution_time": 0.1044301986694336,
+                "result": {
+                  "computation_result": 24,
+                  "operation": "multiply",
+                  "input_values": [
+                    2,
+                    3,
+                    4
+                  ]
+                }
+              },
+              "level": "INFO",
+              "session_id": "3856e476-833f-417b-9db3-8b29ccb06776"
+            }
+          ]
+        }
+      },
+      {
+        "operation_id": "4204d51e-9738-4914-9396-fb1f8cbd6616",
+        "agent_name": "DataProcessingAgent",
+        "agent_type": "data_processing_agent",
+        "operation_type": "task_execution",
+        "timestamp": "2025-08-17T18:03:27.851603+00:00",
+        "duration": 0.109423,
+        "status": "ExecutionStatus.COMPLETED",
+        "inputs": {
+          "task_id": "task_0_1755453807",
+          "timestamp": "2025-08-17T19:03:27.416217",
+          "agent_name": "DataProcessingAgent",
+          "status": "completed",
+          "type": "data_processing",
+          "data": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            -1,
+            -2,
+            10,
+            15
+          ],
+          "processing_type": "statistics",
+          "execution_start": "2025-08-17T19:03:27.876357",
+          "execution_end": "2025-08-17T19:03:27.925029",
+          "result": {
+            "processing_result": {
+              "count": 9,
+              "sum": 37,
+              "avg": 4.111111111111111
+            },
+            "processing_type": "statistics",
+            "input_data_length": 9
+          }
+        },
+        "outputs": {
+          "processing_result": {
+            "count": 9,
+            "sum": 37,
+            "avg": 4.111111111111111
+          },
+          "processing_type": "statistics",
+          "input_data_length": 9
+        },
+        "method_calls": [],
+        "messages_sent": [],
+        "messages_received": [],
+        "error": null,
+        "metadata": {
+          "steps": [
+            {
+              "step_id": "13de513c-dfbd-4c60-9e11-f335312eb472",
+              "timestamp": "2025-08-17T18:03:27.942027+00:00",
+              "step_name": "Task Completed: task_0_1755453807",
+              "details": {
+                "execution_time": 0.08466124534606934,
+                "result": {
+                  "processing_result": {
+                    "count": 9,
+                    "sum": 37,
+                    "avg": 4.111111111111111
+                  },
+                  "processing_type": "statistics",
+                  "input_data_length": 9
+                }
+              },
+              "level": "INFO",
+              "session_id": "3856e476-833f-417b-9db3-8b29ccb06776"
+            }
+          ]
+        }
+      },
+      {
+        "operation_id": "341247dd-fade-4883-8cf7-2f2546c9b25c",
+        "agent_name": "DataProcessingAgent",
+        "agent_type": "data_processing_agent",
+        "operation_type": "task_execution",
+        "timestamp": "2025-08-17T18:03:28.050915+00:00",
+        "duration": 0.113926,
+        "status": "ExecutionStatus.COMPLETED",
+        "inputs": {
+          "task_id": "task_1_1755453807",
+          "timestamp": "2025-08-17T19:03:27.443794",
+          "agent_name": "DataProcessingAgent",
+          "status": "completed",
+          "type": "data_processing",
+          "data": [
+            -5,
+            -10,
+            1,
+            2,
+            3,
+            100,
+            200
+          ],
+          "processing_type": "filter_positive",
+          "execution_start": "2025-08-17T19:03:28.084252",
+          "execution_end": "2025-08-17T19:03:28.127587",
+          "result": {
+            "processing_result": [
+              1,
+              2,
+              3,
+              100,
+              200
+            ],
+            "processing_type": "filter_positive",
+            "input_data_length": 7
+          }
+        },
+        "outputs": {
+          "processing_result": [
+            1,
+            2,
+            3,
+            100,
+            200
+          ],
+          "processing_type": "filter_positive",
+          "input_data_length": 7
+        },
+        "method_calls": [],
+        "messages_sent": [],
+        "messages_received": [],
+        "error": null,
+        "metadata": {
+          "steps": [
+            {
+              "step_id": "63cc5a74-a171-44d9-9e5a-0729fb28b87f",
+              "timestamp": "2025-08-17T18:03:28.150956+00:00",
+              "step_name": "Task Completed: task_1_1755453807",
+              "details": {
+                "execution_time": 0.09087181091308594,
+                "result": {
+                  "processing_result": [
+                    1,
+                    2,
+                    3,
+                    100,
+                    200
+                  ],
+                  "processing_type": "filter_positive",
+                  "input_data_length": 7
+                }
+              },
+              "level": "INFO",
+              "session_id": "3856e476-833f-417b-9db3-8b29ccb06776"
+            }
+          ]
+        }
+      }
+    ],
+    "method_calls": [],
+    "redis_messages": [],
+    "performance_metrics": {
+      "total_duration": 1.395932,
+      "total_method_calls": 0,
+      "completed_method_calls": 0,
+      "failed_method_calls": 0,
+      "method_success_rate": 0,
+      "average_method_execution_time": 0,
+      "total_agent_operations": 6,
+      "completed_agent_operations": 6,
+      "operation_success_rate": 100.0,
+      "total_redis_messages": 0,
+      "error_count": 0,
+      "warning_count": 0
+    },
+    "execution_summary": {
+      "session_name": "demo_session_1755453807",
+      "session_duration": 1.395932,
+      "agents_involved": [
+        "ComputationAgent",
+        "DataProcessingAgent"
+      ],
+      "agent_statistics": {
+        "ComputationAgent": {
+          "total_operations": 3,
+          "completed_operations": 3,
+          "total_duration": 1.4967070000000002,
+          "operation_types": [
+            "task_execution",
+            "agent_initialization"
+          ]
+        },
+        "DataProcessingAgent": {
+          "total_operations": 3,
+          "completed_operations": 3,
+          "total_duration": 1.539385,
+          "operation_types": [
+            "task_execution",
+            "agent_initialization"
+          ]
+        }
+      },
+      "execution_flow": [
+        {
+          "type": "operation",
+          "timestamp": "2025-08-17T18:03:27.083547+00:00",
+          "agent": "ComputationAgent",
+          "operation": "agent_initialization",
+          "status": "COMPLETED",
+          "duration": 1.280148
+        },
+        {
+          "type": "operation",
+          "timestamp": "2025-08-17T18:03:27.113550+00:00",
+          "agent": "DataProcessingAgent",
+          "operation": "agent_initialization",
+          "status": "COMPLETED",
+          "duration": 1.316036
+        },
+        {
+          "type": "operation",
+          "timestamp": "2025-08-17T18:03:27.473668+00:00",
+          "agent": "ComputationAgent",
+          "operation": "task_execution",
+          "status": "COMPLETED",
+          "duration": 0.083781
+        },
+        {
+          "type": "operation",
+          "timestamp": "2025-08-17T18:03:27.647456+00:00",
+          "agent": "ComputationAgent",
+          "operation": "task_execution",
+          "status": "COMPLETED",
+          "duration": 0.132778
+        },
+        {
+          "type": "operation",
+          "timestamp": "2025-08-17T18:03:27.851603+00:00",
+          "agent": "DataProcessingAgent",
+          "operation": "task_execution",
+          "status": "COMPLETED",
+          "duration": 0.109423
+        },
+        {
+          "type": "operation",
+          "timestamp": "2025-08-17T18:03:28.050915+00:00",
+          "agent": "DataProcessingAgent",
+          "operation": "task_execution",
+          "status": "COMPLETED",
+          "duration": 0.113926
+        }
+      ]
+    },
+    "error_count": 0,
+    "warning_count": 0
+  }
+}

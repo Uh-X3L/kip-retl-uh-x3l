@@ -10,7 +10,7 @@
       "created_at": "2025-08-16T01:22:01.567534",
       "last_used": "2025-08-16T11:12:24.701439",
       "usage_count": 3,
-      "status": "active"
+      "status": "inactive"
     },
     {
       "agent_id": "asst_cRfPMcmG5JFh1VKzt67kvCPB",
@@ -22,6 +22,78 @@
       "created_at": "2025-08-16T01:22:13.980978",
       "last_used": "2025-08-16T11:12:37.473038",
       "usage_count": 3,
+      "status": "inactive"
+    },
+    {
+      "agent_id": "asst_rGOWttuiQHDSJ4fwdWU0UPYA",
+      "name": "web_research_analyst",
+      "agent_type": "researcher",
+      "model": "gpt-4o",
+      "instructions_hash": 2658733993363301895,
+      "tools_count": 0,
+      "created_at": "2025-08-18T00:17:28.544325",
+      "last_used": "2025-08-18T01:15:23.306400",
+      "usage_count": 10,
+      "status": "active"
+    },
+    {
+      "agent_id": "asst_tgHeJP0n0DBUMWozq6zDod3Z",
+      "name": "project_planner",
+      "agent_type": "planner",
+      "model": "gpt-4o",
+      "instructions_hash": -6969271760389516602,
+      "tools_count": 0,
+      "created_at": "2025-08-18T00:17:28.834874",
+      "last_used": "2025-08-18T01:15:23.771039",
+      "usage_count": 10,
+      "status": "active"
+    },
+    {
+      "agent_id": "asst_NV0ALikeDPBXjyyouoFZoHDG",
+      "name": "devops_agent",
+      "agent_type": "devops_specialist",
+      "model": "gpt-4o",
+      "instructions_hash": -4330396524856225724,
+      "tools_count": 0,
+      "created_at": "2025-08-18T00:17:29.078769",
+      "last_used": "2025-08-18T01:15:21.397889",
+      "usage_count": 5,
+      "status": "active"
+    },
+    {
+      "agent_id": "asst_43PrivsGYqbpfaK1UopKtNjs",
+      "name": "worker-agent",
+      "agent_type": "worker",
+      "model": "gpt-4o",
+      "instructions_hash": 7894483637265031547,
+      "tools_count": 0,
+      "created_at": "2025-08-18T00:17:29.303079",
+      "last_used": "2025-08-18T01:15:21.839506",
+      "usage_count": 5,
+      "status": "active"
+    },
+    {
+      "agent_id": "asst_4JSmEUHDLFLzTGSLZkdzxvY4",
+      "name": "testing-specialist",
+      "agent_type": "testing",
+      "model": "gpt-4o",
+      "instructions_hash": -1636952829728965631,
+      "tools_count": 0,
+      "created_at": "2025-08-18T00:17:29.555848",
+      "last_used": "2025-08-18T01:15:22.284727",
+      "usage_count": 5,
+      "status": "active"
+    },
+    {
+      "agent_id": "asst_nz4gyfDg4yabriJMYQOKdQp9",
+      "name": "documentation-writer",
+      "agent_type": "documentation",
+      "model": "gpt-4o",
+      "instructions_hash": -1899702238664030715,
+      "tools_count": 0,
+      "created_at": "2025-08-18T00:17:29.748408",
+      "last_used": "2025-08-18T01:15:22.735172",
+      "usage_count": 5,
       "status": "active"
     }
   ],

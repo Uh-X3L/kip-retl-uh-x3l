@@ -1,0 +1,64 @@
+{
+  "global_enabled": false,
+  "modules": {
+    "agent_communication_mixin": {
+      "enabled": true,
+      "methods": [
+        "send_message",
+        "receive_message",
+        "report_task_progress"
+      ]
+    },
+    "simple_messaging": {
+      "enabled": true,
+      "methods": [
+        "send_message",
+        "get_messages",
+        "create_task_message"
+      ]
+    },
+    "backend_supervisor_role_tools": {
+      "enabled": true,
+      "methods": [
+        "create_detailed_issue",
+        "research_topic"
+      ]
+    },
+    "test_module": {
+      "enabled": false
+    },
+    "sample_agent_module": {
+      "enabled": false
+    },
+    "optimized_redis_messaging": {
+      "enabled": true
+    },
+    "github_app_tools": {
+      "enabled": true,
+      "methods": [
+        "create_issue",
+        "open_pr"
+      ]
+    },
+    "performance_test": {
+      "enabled": false
+    },
+    "complete_task_execution_system": {
+      "enabled": true
+    }
+  },
+  "methods": {
+    "sample_agent_module.sample_agent_function": false
+  },
+  "classes": {},
+  "excluded_modules": [
+    "*_test",
+    "test_*",
+    "__pycache__"
+  ],
+  "excluded_methods": [
+    "__init__",
+    "__repr__",
+    "__str__"
+  ]
+}

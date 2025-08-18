@@ -6,6 +6,24 @@ This script provides a comprehensive overview of the Redis-based
 agent communication system we've built.
 """
 
+
+# SNOOP TRACING ADDED - Added by snoop integration script
+import snoop
+
+# Snoop decorator for functions
+trace_func = snoop.snoop
+
+# Snoop decorator for classes  
+@trace_func
+def trace_class(cls):
+    for attr_name in dir(cls):
+        attr = getattr(cls, attr_name)
+        if callable(attr) and not attr_name.startswith('_') and hasattr(attr, '__module__'):
+            setattr(cls, attr_name, trace_func(attr))
+    return cls
+
+
+@trace_func
 def show_system_overview():
     """Show what we've built and how it works."""
     print("🏗️  Redis Agent Communication System")
@@ -87,6 +105,7 @@ def show_system_overview():
     print("   Fallback mechanisms tested!")
     print("   Error handling validated!")
 
+@trace_func
 def run_quick_validation():
     """Run a quick validation to prove everything works."""
     print("\n" + "=" * 60)

@@ -1,0 +1,187 @@
+{
+  "session_info": {
+    "session_name": "demo_session_1755453807",
+    "execution_timestamp": 1755453808.2854426,
+    "demo_duration": 1.265523910522461
+  },
+  "computation_results": [
+    {
+      "input_x": 15,
+      "input_y": 25,
+      "operation": "add",
+      "operation_symbol": "+",
+      "result": 40,
+      "timestamp": 1755453807.198833
+    },
+    {
+      "input_x": 7,
+      "input_y": 8,
+      "operation": "multiply",
+      "operation_symbol": "*",
+      "result": 56,
+      "timestamp": 1755453807.208834
+    },
+    {
+      "input_x": 2,
+      "input_y": 10,
+      "operation": "power",
+      "operation_symbol": "**",
+      "result": 1024,
+      "timestamp": 1755453807.2198346
+    }
+  ],
+  "data_processing_result": {
+    "original_data": [
+      1,
+      -5,
+      3.14,
+      "hello",
+      42,
+      -2.5,
+      "world",
+      100,
+      0,
+      7.5
+    ],
+    "positive_numbers": [
+      1,
+      3.14,
+      42,
+      100,
+      7.5
+    ],
+    "negative_numbers": [
+      -5,
+      -2.5,
+      0
+    ],
+    "other_items": [
+      "hello",
+      "world"
+    ],
+    "statistics": {
+      "count": 5,
+      "sum": 153.64,
+      "average": 30.727999999999998,
+      "min": 1,
+      "max": 100
+    },
+    "processing_timestamp": 1755453807.2585685
+  },
+  "task_execution_results": [
+    {
+      "success": true,
+      "task_id": "task_0_1755453807",
+      "result": {
+        "computation_result": 150,
+        "operation": "add",
+        "input_values": [
+          10,
+          20,
+          30,
+          40,
+          50
+        ]
+      },
+      "execution_time": 0.05150461196899414
+    },
+    {
+      "success": true,
+      "task_id": "task_1_1755453807",
+      "result": {
+        "computation_result": 24,
+        "operation": "multiply",
+        "input_values": [
+          2,
+          3,
+          4
+        ]
+      },
+      "execution_time": 0.1044301986694336
+    },
+    {
+      "success": true,
+      "task_id": "task_0_1755453807",
+      "result": {
+        "processing_result": {
+          "count": 9,
+          "sum": 37,
+          "avg": 4.111111111111111
+        },
+        "processing_type": "statistics",
+        "input_data_length": 9
+      },
+      "execution_time": 0.08466124534606934
+    },
+    {
+      "success": true,
+      "task_id": "task_1_1755453807",
+      "result": {
+        "processing_result": [
+          1,
+          2,
+          3,
+          100,
+          200
+        ],
+        "processing_type": "filter_positive",
+        "input_data_length": 7
+      },
+      "execution_time": 0.09087181091308594
+    }
+  ],
+  "agent1_metrics": {
+    "agent_name": "ComputationAgent",
+    "agent_type": "computation_agent",
+    "current_state": "initialized",
+    "queue_length": 0,
+    "cached_results": 2,
+    "tasks_completed": 2,
+    "total_execution_time": 0.15593481063842773,
+    "average_task_time": 0.07796740531921387,
+    "redis_messages_sent": 0,
+    "redis_messages_received": 0,
+    "tracing_metrics": {
+      "session_name": "demo_session_1755453807",
+      "snoop_enabled": false,
+      "traced_functions_count": 0,
+      "traced_functions": [],
+      "snoop_output_file": "logs\\demo_session_1755453807_snoop_trace.log",
+      "log_directory": "logs",
+      "comprehensive_logging": true,
+      "execution_summary": {}
+    }
+  },
+  "agent2_metrics": {
+    "agent_name": "DataProcessingAgent",
+    "agent_type": "data_processing_agent",
+    "current_state": "initialized",
+    "queue_length": 0,
+    "cached_results": 2,
+    "tasks_completed": 2,
+    "total_execution_time": 0.17553305625915527,
+    "average_task_time": 0.08776652812957764,
+    "redis_messages_sent": 0,
+    "redis_messages_received": 0,
+    "tracing_metrics": {
+      "session_name": "demo_session_1755453807",
+      "snoop_enabled": false,
+      "traced_functions_count": 0,
+      "traced_functions": [],
+      "snoop_output_file": "logs\\demo_session_1755453807_snoop_trace.log",
+      "log_directory": "logs",
+      "comprehensive_logging": true,
+      "execution_summary": {}
+    }
+  },
+  "trace_summary": {
+    "session_name": "demo_session_1755453807",
+    "snoop_enabled": false,
+    "traced_functions_count": 0,
+    "traced_functions": [],
+    "snoop_output_file": "logs\\demo_session_1755453807_snoop_trace.log",
+    "log_directory": "logs",
+    "comprehensive_logging": true,
+    "execution_summary": {}
+  }
+}

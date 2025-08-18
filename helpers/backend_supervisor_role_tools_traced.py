@@ -26,6 +26,23 @@ from dotenv import load_dotenv
 from azure.identity import AzureCliCredential
 
 # Azure AI imports with fallback
+
+# SNOOP TRACING ADDED - Added by snoop integration script
+import snoop
+
+# Snoop decorator for functions
+trace_func = snoop.snoop
+
+# Snoop decorator for classes  
+@trace_func
+def trace_class(cls):
+    for attr_name in dir(cls):
+        attr = getattr(cls, attr_name)
+        if callable(attr) and not attr_name.startswith('_') and hasattr(attr, '__module__'):
+            setattr(cls, attr_name, trace_func(attr))
+    return cls
+
+
 try:
     from azure.ai.projects import AIProjectClient
     from azure.ai.agents.models import FunctionTool
@@ -34,10 +51,12 @@ except ImportError:
     AZURE_AI_AVAILABLE = False
     print("⚠️ Azure AI components not available - using mock implementations")
     
+    @trace_class
     class MockAIProjectClient:
         def __init__(self, *args, **kwargs):
             pass
     
+    @trace_class
     class MockFunctionTool:
         def __init__(self, *args, **kwargs):
             pass
@@ -46,7 +65,7 @@ except ImportError:
     FunctionTool = MockFunctionTool
 
 # Import GitHub tools
-from github_app_tools import (
+from .github_app_tools import (
     resolve_installation_id, 
     installation_token_cached, 
     create_issue,
@@ -58,7 +77,7 @@ from github_app_tools import (
 )
 
 # Import new agent system
-from agents import AgentManager, AGENT_TYPES, get_agent_capabilities
+from .agents import AgentManager, AGENT_TYPES, get_agent_capabilities
 
 # Load environment variables
 load_dotenv()
@@ -69,6 +88,7 @@ MODEL_DEPLOYMENT_NAME = os.environ.get("MODEL_DEPLOYMENT_NAME")
 REPO = os.environ.get("GITHUB_REPO")
 
 
+@trace_class
 class TaskPriority(Enum):
     """Enumeration for task priority levels."""
     LOW = "low"
@@ -78,6 +98,7 @@ class TaskPriority(Enum):
 
 
 @dataclass
+@trace_class
 class SubTask:
     """Data class representing a project subtask."""
     title: str
@@ -89,6 +110,7 @@ class SubTask:
 
 
 @dataclass
+@trace_class
 class ResearchResult:
     """Data class representing research results for a project topic."""
     topic: str
@@ -108,6 +130,7 @@ class ResearchResult:
     competitive_landscape: str = None
 
 
+@trace_func
 def extract_content_text(content) -> str:
     """
     Helper function to extract text from Azure AI agent content object.
@@ -158,6 +181,7 @@ def extract_content_text(content) -> str:
     return ""
 
 
+@trace_class
 class BackendSupervisorAgent:
     """
     Advanced AI Supervisor Agent with Engineering Excellence Methodology
@@ -220,6 +244,7 @@ class BackendSupervisorAgent:
         
         print("🚀 Backend Supervisor Agent initialized with Agent Optimization System!")
     
+    @trace_func
     def coordinate_comprehensive_project(self, project_idea: str, requirements: str = "") -> Dict[str, Any]:
         """
         Use the simplified coordinator for comprehensive project management.
@@ -242,6 +267,7 @@ class BackendSupervisorAgent:
             print("ℹ️ Using fallback direct project creation")
             return self.create_comprehensive_project(project_idea, requirements)
     
+    @trace_func
     def create_devops_solution(self, project_type: str = "python_web_app", requirements: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Create comprehensive DevOps solution using the specialized DevOps agent.
@@ -286,6 +312,7 @@ class BackendSupervisorAgent:
                 ]
             }
     
+    @trace_func
     def optimize_agent_performance(self) -> Dict[str, Any]:
         """
         Optimize agent performance by cleaning up unused agents and updating configurations.
@@ -335,6 +362,7 @@ class BackendSupervisorAgent:
                 ]
             }
     
+    @trace_func
     def create_comprehensive_project(self, project_idea: str, requirements: str = "",
                                    include_devops: bool = True, include_testing: bool = True,
                                    include_documentation: bool = True) -> Dict[str, Any]:
@@ -538,6 +566,7 @@ class BackendSupervisorAgent:
             results["error"] = str(e)
             return results
     
+    @trace_func
     def demonstrate_agent_capabilities(self) -> Dict[str, Any]:
         """
         Demonstrate the capabilities of all specialized agents.
@@ -612,6 +641,7 @@ class BackendSupervisorAgent:
             demo_results["error"] = str(e)
             return demo_results
     
+    @trace_func
     def research_topic(self, topic: str, context: str = "") -> ResearchResult:
         """
         Performs deep web research using the specialized Web Research Analyst agent.
@@ -873,6 +903,7 @@ class BackendSupervisorAgent:
                 recommendations=["Start with MVP", "Use well-documented technologies"]
             )
     
+    @trace_func
     def create_detailed_issue(self, project_idea: str, requirements: str = "") -> Dict[str, Any]:
         """
         Creates a detailed GitHub issue with research-backed subtasks and enhanced project management.
@@ -1321,6 +1352,7 @@ This master issue coordinates the overall project. Each subtask will be created 
             assignee="Uh-X3L"  # Repository owner
         )
     
+    @trace_func
     def get_engineering_methodology(self) -> Dict[str, Any]:
         """
         Return the engineering excellence methodology for other agents to adopt.
@@ -1368,6 +1400,7 @@ This master issue coordinates the overall project. Each subtask will be created 
             }
         }
     
+    @trace_func
     def apply_engineering_methodology_to_plan(self, plan: Dict[str, Any]) -> Dict[str, Any]:
         """
         Apply engineering methodology to validate and refine any project plan.
@@ -1448,6 +1481,7 @@ This master issue coordinates the overall project. Each subtask will be created 
 
 
 # Convenience functions for easy access
+@trace_func
 def create_project_plan(idea: str, requirements: str = "") -> Dict[str, Any]:
     """
     Main function to create a comprehensive project plan with AI research and task delegation.
@@ -1478,6 +1512,7 @@ def create_project_plan(idea: str, requirements: str = "") -> Dict[str, Any]:
     return result
 
 
+@trace_func
 def plan_project(idea: str, requirements: str = "") -> Dict[str, Any]:
     """
     Plan a single project - direct function call, no async wrapper needed.

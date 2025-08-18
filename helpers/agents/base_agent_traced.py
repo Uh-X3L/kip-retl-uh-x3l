@@ -11,6 +11,23 @@ import json
 import time
 from datetime import datetime
 
+
+# SNOOP TRACING ADDED - Added by snoop integration script
+import snoop
+
+# Snoop decorator for functions
+trace_func = snoop.snoop
+
+# Snoop decorator for classes  
+@trace_func
+def trace_class(cls):
+    for attr_name in dir(cls):
+        attr = getattr(cls, attr_name)
+        if callable(attr) and not attr_name.startswith('_') and hasattr(attr, '__module__'):
+            setattr(cls, attr_name, trace_func(attr))
+    return cls
+
+
 logger = logging.getLogger(__name__)
 
 # Azure AI Projects import with fallback
@@ -22,36 +39,46 @@ except ImportError:
     AZURE_AI_PROJECTS_AVAILABLE = False
     logger.warning("Azure AI Projects not available - using mock client")
     
+    @trace_class
     class MockAIProjectClient:
         def __init__(self, *args, **kwargs):
             pass
         
+        @trace_func
         def agents(self):
             return MockAgentManager()
     
+    @trace_class
     class MockAgentManager:
+        @trace_func
         def create_agent(self, *args, **kwargs):
             return MockAgent()
         
+        @trace_func
         def get_agent(self, agent_id):
             return MockAgent()
         
+        @trace_func
         def create_thread(self):
             return MockThread()
         
+        @trace_func
         def get_thread(self, thread_id):
             return MockThread()
     
+    @trace_class
     class MockAgent:
         def __init__(self):
             self.id = "mock_agent_id"
     
+    @trace_class
     class MockThread:
         def __init__(self):
             self.id = "mock_thread_id"
     
     AIProjectClient = MockAIProjectClient
 
+@trace_class
 class BaseAgent:
     """
     Base class for all Azure AI Foundry agents with built-in reuse capabilities.
@@ -229,6 +256,7 @@ class BaseAgent:
         except Exception as e:
             logger.warning(f"Failed to save registry: {str(e)}")
     
+    @trace_func
     def create_thread(self) -> str:
         """Create a new conversation thread."""
         try:
@@ -239,28 +267,26 @@ class BaseAgent:
             logger.error(f"Failed to create thread: {str(e)}")
             raise
     
+    @trace_func
     def send_message(self, message: str, thread_id: str = None) -> str:
         """Send message to agent and get response."""
         try:
             if thread_id:
-                # Use provided thread ID
                 thread = self.project_client.agents.get_thread(thread_id)
             elif self.thread:
-                # Use existing thread
                 thread = self.thread
             else:
-                # Create new thread using the correct API
                 thread = self.project_client.agents.create_thread()
                 self.thread = thread
             
-            # Send message using the correct API
+            # Send message
             message_obj = self.project_client.agents.create_message(
                 thread_id=thread.id,
                 role="user",
                 content=message
             )
             
-            # Run agent using the correct API
+            # Run agent
             run = self.project_client.agents.create_run(
                 thread_id=thread.id,
                 assistant_id=self.agent.id
@@ -272,58 +298,18 @@ class BaseAgent:
                 run = self.project_client.agents.get_run(thread_id=thread.id, run_id=run.id)
             
             if run.status == "completed":
-                # Get response using correct API
+                # Get response
                 messages = self.project_client.agents.list_messages(thread_id=thread.id)
                 return messages.data[0].content[0].text.value
             else:
                 logger.error(f"Run failed with status: {run.status}")
                 return f"Error: Run failed with status {run.status}"
                 
-        except AttributeError as e:
-            if "create_thread" in str(e) or "create_message" in str(e) or "create_run" in str(e):
-                # Handle the Azure AI API compatibility issue
-                logger.warning(f"Azure AI API compatibility issue: {e}")
-                try:
-                    # Try direct project client methods (newer API)
-                    if not hasattr(self, 'thread') or self.thread is None:
-                        self.thread = self.project_client.create_thread()
-                    
-                    # Send message
-                    self.project_client.create_message(
-                        thread_id=self.thread.id,
-                        role="user",
-                        content=message
-                    )
-                    
-                    # Run agent
-                    run = self.project_client.create_run(
-                        thread_id=self.thread.id,
-                        assistant_id=self.agent.id
-                    )
-                    
-                    # Wait for completion
-                    while run.status in ["queued", "in_progress", "cancelling"]:
-                        time.sleep(1)
-                        run = self.project_client.get_run(thread_id=self.thread.id, run_id=run.id)
-                    
-                    if run.status == "completed":
-                        # Get response
-                        messages = self.project_client.list_messages(thread_id=self.thread.id)
-                        return messages.data[0].content[0].text.value
-                    else:
-                        logger.error(f"Run failed with status: {run.status}")
-                        return f"Error: Run failed with status {run.status}"
-                        
-                except Exception as e2:
-                    logger.error(f"Fallback method also failed: {e2}")
-                    # Final fallback - return a mock response for now
-                    return f"Agent {self.agent_name} executed task: {message[:100]}... (API compatibility issue - see logs)"
-            else:
-                raise
         except Exception as e:
             logger.error(f"Failed to send message: {str(e)}")
             raise
     
+    @trace_func
     def cleanup(self):
         """Clean up agent resources if needed."""
         try:
@@ -336,6 +322,7 @@ class BaseAgent:
         except Exception as e:
             logger.warning(f"Error during cleanup: {str(e)}")
     
+    @trace_func
     def get_agent_info(self) -> Dict:
         """Get agent information and statistics."""
         return {

@@ -1,0 +1,14 @@
+{
+  "system_id": "task_system_1755469772",
+  "summary": {
+    "system_id": "task_system_1755469772",
+    "components_used": {
+      "supervisor": true,
+      "messaging": true,
+      "tracing": false,
+      "agents_count": 0
+    },
+    "execution_log_entries": 0
+  },
+  "execution_log": []
+}
