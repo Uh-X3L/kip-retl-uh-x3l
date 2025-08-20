@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 
 # Import simplified messaging
 try:
-    from .agent_communication.simple_messaging import SimpleMessaging, MessageType, MessagePriority, send_task_to_agent, SimpleMessage
+    from ..helpers.agent_communication.simple_messaging import SimpleMessaging, MessageType, MessagePriority, send_task_to_agent, SimpleMessage
     MESSAGING_AVAILABLE = True
 except ImportError:
     MESSAGING_AVAILABLE = False

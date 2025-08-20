@@ -6,7 +6,7 @@ Demonstration of how to replace 35+ _traced.py files with a single
 dynamic tracing system that can be enabled/disabled at runtime.
 """
 
-from helpers.dynamic_tracing_controller import (
+from helpers.logging.dynamic_tracing_controller import (
     TRACING_CONTROLLER, conditional_trace, trace_class,
     enable_agent_communication_tracing, disable_all_tracing,
     enable_debug_mode, get_tracing_summary, quick_setup_for_debugging
@@ -151,8 +151,8 @@ def demonstrate_agent_communication_tracing():
     quick_setup_for_debugging()
     
     # Import and use real agent communication modules
-    from helpers.agent_communication_mixin import CommunicatingAgent
-    from helpers.simple_messaging import create_simple_messaging
+    from helpers.agent_communication.agent_communication_mixin import CommunicatingAgent
+    from helpers.agent_communication.simple_messaging import create_simple_messaging
     
     # Create messaging and agents
     messaging = create_simple_messaging(use_redis=False)

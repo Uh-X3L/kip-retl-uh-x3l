@@ -30,7 +30,7 @@ def test_simple_messaging():
     """Test the simple messaging system."""
     print("1. Testing Simple Messaging...")
     try:
-        from helpers.simple_messaging import SimpleMessaging, MessageType
+        from helpers.agent_communication.simple_messaging import SimpleMessaging, MessageType
         
         messaging = SimpleMessaging()
         print(f"   ✅ SimpleMessaging created: {type(messaging)}")
@@ -64,7 +64,7 @@ def test_agent_communication_mixin():
     """Test the agent communication mixin."""
     print("\n2. Testing Agent Communication Mixin...")
     try:
-        from helpers.agent_communication_mixin import AgentCommunicationMixin, CommunicatingAgent
+        from helpers.agent_communication.agent_communication_mixin import AgentCommunicationMixin, CommunicatingAgent
         
         # Test CommunicatingAgent (mixin requires params through this class)
         agent = CommunicatingAgent(
@@ -94,7 +94,7 @@ def test_sample_agents():
     """Test the sample communicating agents."""
     print("\n3. Testing Sample Communicating Agents...")
     try:
-        from helpers.sample_communicating_agent import SampleAnalysisAgent, SampleDevelopmentAgent
+        from helpers_old.sample_communicating_agent import SampleAnalysisAgent, SampleDevelopmentAgent
         
         # Test analysis agent
         analysis_agent = SampleAnalysisAgent("test-analysis")
@@ -126,7 +126,7 @@ def test_simple_coordinator():
     """Test the simple agent coordinator."""
     print("\n4. Testing Simple Agent Coordinator...")
     try:
-        from helpers.simple_agent_coordinator import SimpleAgentCoordinator
+        from helpers_old.simple_agent_coordinator import SimpleAgentCoordinator
         
         coordinator = SimpleAgentCoordinator("test-coordinator")
         print(f"   ✅ SimpleAgentCoordinator created: {coordinator.coordinator_id}")
@@ -147,7 +147,7 @@ def test_redis_demo():
     """Test the Redis communication demo."""
     print("\n5. Testing Redis Communication Demo...")
     try:
-        from helpers.redis_communication_demo import RedisCommunicationDemo
+        from helpers_old.redis_communication_demo import RedisCommunicationDemo
         
         demo = RedisCommunicationDemo()
         print(f"   ✅ RedisCommunicationDemo created")

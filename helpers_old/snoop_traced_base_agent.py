@@ -21,7 +21,7 @@ from .snoop_enhanced_logger import (
 
 # Import your existing modules
 try:
-    from .comprehensive_execution_logger import (
+    from ..helpers.logging.comprehensive_execution_logger import (
         log_method, start_operation, end_operation, log_step,
         LogLevel, ExecutionStatus, get_execution_logger
     )
@@ -31,7 +31,7 @@ except ImportError:
     COMPREHENSIVE_LOGGING_AVAILABLE = False
 
 try:
-    from .optimized_redis_messaging import OptimizedRedisMessaging
+    from ..helpers.agent_communication.optimized_redis_messaging import OptimizedRedisMessaging
     REDIS_MESSAGING_AVAILABLE = True
 except ImportError:
     print("⚠️ Redis messaging not available")

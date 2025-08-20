@@ -21,7 +21,7 @@ import asyncio
 from typing import Dict, Any, List
 from datetime import datetime, timezone
 
-from .simple_messaging import SimpleMessaging, MessageType
+from ..helpers.agent_communication.simple_messaging import SimpleMessaging, MessageType
 from .simple_agent_coordinator import SimpleAgentCoordinator
 from .sample_communicating_agent import SampleAnalysisAgent, SampleDevelopmentAgent
 

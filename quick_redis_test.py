@@ -5,7 +5,7 @@ Quick Redis Communication Test
 A simple test to verify Redis communication is working correctly.
 """
 
-from helpers.sample_communicating_agent import SampleAnalysisAgent, SampleDevelopmentAgent
+from helpers_old.sample_communicating_agent import SampleAnalysisAgent, SampleDevelopmentAgent
 
 def quick_redis_test():
     """Quick test of Redis communication system."""

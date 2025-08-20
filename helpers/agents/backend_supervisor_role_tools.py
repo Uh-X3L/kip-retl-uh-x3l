@@ -30,13 +30,6 @@ try:
 except ImportError:
     AZURE_AI_AVAILABLE = False
     print("⚠️ Azure AI components not available - using mock implementations")
-    
-    class MockAIProjectClient:
-        pass
-    class MockFunctionTool:
-        def __init__(self, *args, **kwargs):
-            pass
-
 
 class TaskPriority(Enum):
     """Task priority levels."""
@@ -187,7 +180,8 @@ class BackendSupervisorAgent:
         
         # Create a real GitHub issue URL (would be actual in production)
         import time
-        issue_number = int(time.time()) % 10000  # Generate realistic issue number
+        issue_number = int(time.time()) % 10000  # Generate realistic issue number #TODO: Get the latest number and then increment by 1
+        
         issue_url = f"https://github.com/Uh-X3L/kip-retl-uh-x3l/issues/{issue_number}"
         
         return {

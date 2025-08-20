@@ -14,10 +14,10 @@ from typing import Dict, Any, List
 from unittest.mock import Mock, patch
 
 # Import the modules we're testing
-from helpers.agent_communication_mixin import AgentCommunicationMixin, CommunicatingAgent
-from helpers.simple_messaging import SimpleMessaging, MessageType, create_simple_messaging
-from helpers.backend_supervisor_role_tools import BackendSupervisorAgent
-from helpers.dynamic_tracing_controller import TRACING_CONTROLLER, conditional_trace
+from helpers.agent_communication.agent_communication_mixin import AgentCommunicationMixin, CommunicatingAgent
+from helpers.agent_communication.simple_messaging import SimpleMessaging, MessageType, create_simple_messaging
+from helpers.agents.backend_supervisor_role_tools import BackendSupervisorAgent
+from helpers.logging.dynamic_tracing_controller import TRACING_CONTROLLER, conditional_trace
 
 
 class TestAgentCommunication:
@@ -219,7 +219,7 @@ class TestAgentCommunication:
         memory_messaging = SimpleMessaging(use_redis=False)
         
         # Test basic operations
-        from helpers.simple_messaging import send_task_to_agent, send_status_update
+        from helpers.agent_communication.simple_messaging import send_task_to_agent, send_status_update
         
         # Send messages
         task_data = {"task_id": "fallback-task", "description": "Test fallback"}
@@ -293,7 +293,7 @@ class TestAgentCommunication:
     
     def test_message_serialization(self):
         """Test message serialization and deserialization."""
-        from helpers.simple_messaging import SimpleMessage, MessageType, MessagePriority
+        from helpers.agent_communication.simple_messaging import SimpleMessage, MessageType, MessagePriority
         
         # Create complex message
         message = SimpleMessage(
@@ -373,7 +373,7 @@ class TestDynamicTracing:
         TRACING_CONTROLLER.save_configuration()
         
         # Create new controller to test loading
-        from helpers.dynamic_tracing_controller import TracingController
+        from helpers.logging.dynamic_tracing_controller import TracingController
         new_controller = TracingController()
         
         # Verify configuration loaded

@@ -115,9 +115,9 @@ def run_quick_validation():
     try:
         # Test imports
         print("📦 Testing imports...")
-        from helpers.simple_messaging import SimpleMessaging, MessageType
-        from helpers.agent_communication_mixin import CommunicatingAgent
-        from helpers.sample_communicating_agent import SampleAnalysisAgent
+        from helpers.agent_communication.simple_messaging import SimpleMessaging, MessageType
+        from helpers.agent_communication.agent_communication_mixin import CommunicatingAgent
+        from helpers_old.sample_communicating_agent import SampleAnalysisAgent
         print("   ✅ All imports successful")
         
         # Test messaging

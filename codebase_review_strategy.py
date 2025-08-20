@@ -23,10 +23,10 @@ from typing import Dict, List, Any, Optional
 helpers_path = Path(__file__).parent / "helpers"
 sys.path.insert(0, str(helpers_path))
 
-from helpers.backend_supervisor_role_tools import BackendSupervisorAgent, create_project_plan
-from helpers.simple_messaging import SimpleMessaging, MessageType, create_simple_messaging
-from helpers.sample_communicating_agent import SampleAnalysisAgent, SampleDevelopmentAgent
-from helpers.simple_agent_coordinator import SimpleAgentCoordinator
+from helpers.agents.backend_supervisor_role_tools import BackendSupervisorAgent, create_project_plan
+from helpers.agent_communication.simple_messaging import SimpleMessaging, MessageType, create_simple_messaging
+from helpers_old.sample_communicating_agent import SampleAnalysisAgent, SampleDevelopmentAgent
+from helpers_old.simple_agent_coordinator import SimpleAgentCoordinator
 
 print("🎯 AUTOMATED CODEBASE REVIEW AND FIX STRATEGY")
 print("=" * 60)

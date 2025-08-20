@@ -14,7 +14,7 @@ from datetime import datetime
 
 # Import comprehensive execution logger
 try:
-    from .logging.comprehensive_execution_logger import (
+    from ..helpers.logging.comprehensive_execution_logger import (
         log_method, start_operation, end_operation, log_step, 
         LogLevel, ExecutionStatus, get_execution_logger
     )
@@ -33,7 +33,7 @@ except ImportError:
 
 # Import optimized messaging
 try:
-    from .agent_communication.optimized_redis_messaging import (
+    from ..helpers.agent_communication.optimized_redis_messaging import (
         OptimizedRedisMessaging, create_optimized_messaging, 
         create_message, MessageType
     )
@@ -42,7 +42,7 @@ except ImportError:
     REDIS_MESSAGING_AVAILABLE = False
 
 # Import base agent
-from ..helpers_old.agents.base_agent import BaseAgent as OriginalBaseAgent
+from .agents.base_agent import BaseAgent as OriginalBaseAgent
 
 logger = logging.getLogger(__name__)
 

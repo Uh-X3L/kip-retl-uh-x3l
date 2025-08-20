@@ -16,7 +16,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, current_dir)
 
 try:
-    from helpers.agent_communication import AgentMessage, MessageType, MessagePriority, MessageQueueManager
+    from helpers_old.agent_communication import AgentMessage, MessageType, MessagePriority, MessageQueueManager
 except ImportError:
     from message_protocol import AgentMessage, MessageType, MessagePriority
     from queue_manager import MessageQueueManager

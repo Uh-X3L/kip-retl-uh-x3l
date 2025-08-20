@@ -8,8 +8,8 @@ confusing error messages or warnings.
 
 import time
 import logging
-from helpers.sample_communicating_agent import SampleAnalysisAgent, SampleDevelopmentAgent
-from helpers.simple_messaging import SimpleMessaging
+from helpers_old.sample_communicating_agent import SampleAnalysisAgent, SampleDevelopmentAgent
+from helpers.agent_communication.simple_messaging import SimpleMessaging
 
 # Set logging to INFO to reduce debug noise
 

@@ -15,7 +15,7 @@ import logging
 from typing import Dict, Any, Optional
 from datetime import datetime, timezone
 
-from .agent_communication.agent_communication_mixin import CommunicatingAgent
+from ..helpers.agent_communication.agent_communication_mixin import CommunicatingAgent
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

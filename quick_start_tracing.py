@@ -6,7 +6,7 @@ This demonstrates how to use traced execution for debugging your existing code.
 """
 
 # Import the traced version
-from helpers.github_app_tools_traced import GitHubAppTools
+from helpers_old.github_app_tools_traced import GitHubAppTools
 
 print("🎯 TESTING TRACED GITHUB APP TOOLS")
 print("=" * 50)

@@ -21,7 +21,7 @@ sys.path.insert(0, current_dir)
 sys.path.insert(0, parent_dir)
 
 try:
-    from helpers.agent_communication import AgentMessage, MessageType, MessagePriority, MessageQueueManager
+    from helpers_old.agent_communication import AgentMessage, MessageType, MessagePriority, MessageQueueManager
 except ImportError:
     # If that fails, try direct imports
     from message_protocol import AgentMessage, MessageType, MessagePriority

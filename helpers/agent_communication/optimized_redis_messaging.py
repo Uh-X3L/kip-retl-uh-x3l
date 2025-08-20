@@ -20,7 +20,7 @@ from enum import Enum
 
 # Import comprehensive execution logger
 try:
-    from .comprehensive_execution_logger import log_redis_message, log_method
+    from ..logging.comprehensive_execution_logger import log_redis_message, log_method
     COMPREHENSIVE_LOGGING_AVAILABLE = True
 except ImportError:
     # Fallback if logger not available

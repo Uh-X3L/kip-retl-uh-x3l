@@ -30,7 +30,7 @@ from contextlib import contextmanager
 
 # Import the comprehensive execution logger
 try:
-    from .comprehensive_execution_logger import (
+    from ..helpers.logging.comprehensive_execution_logger import (
         ComprehensiveExecutionLogger, initialize_execution_logger,
         log_method, start_operation, end_operation, log_step,
         LogLevel, ExecutionStatus, get_execution_logger

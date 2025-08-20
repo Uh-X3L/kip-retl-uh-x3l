@@ -12,14 +12,14 @@ import json
 from pathlib import Path
 
 # Import the snoop tracing system
-from helpers.snoop_enhanced_logger import (
+from helpers_old.snoop_enhanced_logger import (
     initialize_snoop_tracing, start_comprehensive_tracing,
     snoop_trace, get_snoop_logger, view_trace_output,
     finalize_snoop_tracing
 )
 
 # Import the traced base agent
-from helpers.snoop_traced_base_agent import create_traced_agent, SnoopTracedBaseAgent
+from helpers_old.snoop_traced_base_agent import create_traced_agent, SnoopTracedBaseAgent
 
 @snoop_trace
 def demo_computation(x: int, y: int, operation: str = "add") -> dict:

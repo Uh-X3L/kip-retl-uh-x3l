@@ -15,7 +15,7 @@ try:
     
     # Let's test the traced simple messaging module
     print("📋 Testing traced simple messaging...")
-    from helpers.simple_messaging_traced import *
+    from helpers_old.simple_messaging_traced import *
     
     print("✅ Traced module imported successfully!")
     print("🔍 Now every function call will be traced line by line!")
